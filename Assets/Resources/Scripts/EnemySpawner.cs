@@ -26,7 +26,7 @@ public class EnemySpawner : MonoBehaviour {
 
     public void spawnEnemy<T>() where T : Enemy
     {
-        GameObject enemyGO = new GameObject();
+        GameObject enemyGO = new GameObject("Enemy handler");
         enemyGO.AddComponent<T>();
     }
 
