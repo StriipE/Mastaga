@@ -13,4 +13,19 @@ public class Player : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void onAttackEvent()
+    {
+
+    }
+
+    public void onMagicEvent()
+    {
+
+    }
+
+    public void onHealEvent()
+    {
+
+    }
 }
