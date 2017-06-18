@@ -11,7 +11,8 @@ namespace Assets.Resources.Scripts.Enemies
     {
         void Start()
         {
-            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Droums"));
+            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Droums"));
+            EnemySprite.transform.parent = gameObject.transform;
         }
 
         protected override void setAttacks()

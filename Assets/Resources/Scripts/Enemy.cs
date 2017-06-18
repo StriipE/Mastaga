@@ -28,7 +28,7 @@ namespace Assets.Resources.Scripts
         {
             TargetPlayer = GameObject.Find("Player").GetComponent<Player>();
             setAttacks();
-            timeSinceLastAttack = AttackRate;
+            timeSinceLastAttack = 1f / AttackRate;
         }
 
         public virtual void moveTowardsHero()
@@ -42,7 +42,7 @@ namespace Assets.Resources.Scripts
                 if (timeSinceLastAttack < 0)
                 {
                     castRandomAttack();
-                    timeSinceLastAttack = AttackRate;
+                    timeSinceLastAttack = 1f / AttackRate;
                 }
             }
         }
