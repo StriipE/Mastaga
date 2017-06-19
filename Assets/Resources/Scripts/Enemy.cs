@@ -12,6 +12,7 @@ namespace Assets.Resources.Scripts
 
         public Player TargetPlayer;
         private float timeSinceLastAttack;
+        private float timeToLive = 10f;
 
         public int HP { get; set; }
         public int Strength { get; set; }
@@ -56,11 +57,15 @@ namespace Assets.Resources.Scripts
         public void Update()
         {
             moveTowardsHero();
+            timeToLive -= Time.deltaTime;
+            if (timeToLive < 0)
+                Destroy(this);
         }
 
         public void OnDestroy()
         {
-            Destroy(EnemySprite);
+            //Destroy(EnemySprite);
+            Destroy(EnemySprite.transform.parent.gameObject);
         }
 
         protected abstract void setAttacks();
