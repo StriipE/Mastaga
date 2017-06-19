@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-<<<<<<< HEAD
-    
-
     public Renderer rend;
     public Material standardMaterial;
     public Material attackMaterial;
 
     private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
 	// Use this for initialization
-	void Start () {
-
+	void Start ()
+    {
+        HP = 50000;
     }
+
+    public float HP
+    {
+        get; set;
+    }
+
+	// Use this for initialization
 	
 	// Update is called once per frame
 	void Update () {
