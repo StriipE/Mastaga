@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Resources.Scripts.Attacks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,14 @@ namespace Assets.Resources.Scripts.Enemies
     {
         void Start()
         {
-            EnemySprite = (GameObject) Instantiate(UnityEngine.Resources.Load(@"Prefabs/Spanker"));
+            EnemySprite = (GameObject) Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Spanker"));
+            EnemySprite.transform.parent = gameObject.transform;
+        }
+
+        protected override void setAttacks()
+        {
+            gameObject.AddComponent<BasicAttack>();
+            gameObject.AddComponent<Fireball>();
         }
 
         public Spanker()
@@ -22,11 +30,8 @@ namespace Assets.Resources.Scripts.Enemies
             PhysicalDefense = 10;
             MagicalDefense = 10;
             Speed = 1f;
+            AttackRate = 1f;
         }
 
-        public override void attack()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

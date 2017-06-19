@@ -7,7 +7,7 @@ using System;
 
 public class EnemySpawner : MonoBehaviour {
 
-    private float timeBetweenSpawns = 3.0f;
+    private float timeBetweenSpawns = 10.0f;
 
 	void Start () {
         spawnRandomEnemy();
@@ -19,14 +19,14 @@ public class EnemySpawner : MonoBehaviour {
         if (timeBetweenSpawns < 0)
         {
             spawnRandomEnemy();
-            timeBetweenSpawns = 3.0f;
+            timeBetweenSpawns = 10.0f;
         }
 
 	}
 
     public void spawnEnemy<T>() where T : Enemy
     {
-        GameObject enemyGO = new GameObject("Enemy handler");
+        GameObject enemyGO = new GameObject("EnemyHandler");
         enemyGO.AddComponent<T>();
     }
 
@@ -48,4 +48,5 @@ public class EnemySpawner : MonoBehaviour {
                 throw new ArgumentOutOfRangeException("EnemySpawner.spawnRandomEnemy Error : Unexpected random value.");
         }
     }
+
 }

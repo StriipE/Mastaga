@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Resources.Scripts.Attacks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,13 @@ namespace Assets.Resources.Scripts.Enemies
     {
         void Start()
         {
-            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Droums"));
+            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Droums"));
+            EnemySprite.transform.parent = gameObject.transform;
+        }
+
+        protected override void setAttacks()
+        {
+            gameObject.AddComponent<Fireball>();
         }
 
         public Droums()
@@ -22,11 +29,8 @@ namespace Assets.Resources.Scripts.Enemies
             PhysicalDefense = 15;
             MagicalDefense = 5;
             Speed = 1.5f;
+            AttackRate = 2f;
         }
 
-        public override void attack()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

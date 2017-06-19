@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Resources.Scripts.Attacks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,13 @@ namespace Assets.Resources.Scripts.Enemies
     {
         void Start()
         {
-            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Banga"));
+            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Banga"));
+            EnemySprite.transform.parent = gameObject.transform;
+        }
+
+        protected override void setAttacks()
+        {
+            gameObject.AddComponent<BasicAttack>();
         }
 
         public Banga()
@@ -22,11 +29,8 @@ namespace Assets.Resources.Scripts.Enemies
             PhysicalDefense = 20;
             MagicalDefense = 10;
             Speed = 0.75f;
+            AttackRate = 0.5f;
         }
 
-        public override void attack()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
