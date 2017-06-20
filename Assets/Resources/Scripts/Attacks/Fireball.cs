@@ -48,9 +48,8 @@ namespace Assets.Resources.Scripts.Attacks
                                               - new Vector3(enemyCastingThisSpell.transform.GetChild(0).localScale.x / 2f, 0, 0); // Casts fireball at current enemy position 
 
             float damage = calculateDamage();
-            player.HP -= damage;
-            Debug.Log("Casted Fireball on player for " + damage + " damage. New HP count = " + player.HP);
-            player.onLifeLoss();
+            player.getDamaged(damage);
+            Debug.Log("Casted Fireball on player for " + damage + " damage.");
         }
 
         void OnDestroy()

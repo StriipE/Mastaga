@@ -17,9 +17,8 @@ namespace Assets.Resources.Scripts.Attacks
         public override void castAttackOnPlayer(Player player)
         {
             float damage = calculateDamage();
-            player.HP -= damage;
-            Debug.Log("Casted BasicAttack on player for " + damage + " damage. New HP count = " + player.HP);
-            player.onLifeLoss();
+            player.getDamaged(damage);
+            Debug.Log("Casted BasicAttack on player for " + damage + " damage.");
         }
     }
 }

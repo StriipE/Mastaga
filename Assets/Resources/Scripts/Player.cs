@@ -1,34 +1,31 @@
-﻿using System.Collections;
+﻿using Assets.Resources.Scripts;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
-    private Text lifeText;
-    private RectTransform lifeBar;
-    private float lifeBarSize;
-
     public Renderer rend;
     public Material standardMaterial;
     public Material attackMaterial;
-    public float HP { get; set; }
-    public float MaxHP { get; set; }
+    public GenericProgressBar lifeBar;
+
+    private float HP;
+    private float MaxHP;
 
     private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
 	
     void Awake()
     {
-        lifeText = GameObject.Find("TextLife").transform.GetChild(1).GetComponent<Text>();
-        lifeBar = GameObject.Find("CurrentHP").GetComponent<RectTransform>();
-        lifeBarSize = lifeBar.transform.parent.GetComponent<RectTransform>().sizeDelta.x;
+
     }
     // Use this for initialization
 	void Start ()
     {
-        MaxHP = 1500;
-        HP = MaxHP;
-        renderPlayerHP();
+        HP = 1500;
+        MaxHP = HP;
+        lifeBar.setValues(HP, MaxHP);
     }
 
 
@@ -36,8 +33,14 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
-	}
+        lifeBar.renderValues();
+    }
+
+    public void getDamaged(float damage)
+    {
+        HP -= damage;
+        lifeBar.updateCurrent(HP);
+    }
 
     public void onAttackEvent()
     {
@@ -49,11 +52,6 @@ public class Player : MonoBehaviour {
     {
         this.rend.material = standardMaterial;
         Debug.Log("End Click");
-    }
-
-    public void onLifeLoss()
-    {
-        renderPlayerHP();
     }
 
     public void onMagicEvent()
@@ -76,9 +74,4 @@ public class Player : MonoBehaviour {
 
     }
 
-    private void renderPlayerHP()
-    {
-        lifeText.text = HP.ToString() + "/" + MaxHP.ToString();
-        lifeBar.offsetMax = new Vector2(- (lifeBarSize - (lifeBarSize * (HP / MaxHP))), 5);
-    }
 }
