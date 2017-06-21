@@ -1,4 +1,5 @@
 ﻿using Assets.Resources.Scripts;
+using Assets.Resources.Scripts.Attacks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,11 @@ public class Player : MonoBehaviour {
     public Material standardMaterial;
     public Material attackMaterial;
     public GenericProgressBar lifeBar;
+    public float Strength;
 
     private float HP;
     private float MaxHP;
+    private Attack[] playerAttacks { get { return gameObject.GetComponents<Attack>(); } }
 
     private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
 	
@@ -23,6 +26,8 @@ public class Player : MonoBehaviour {
     // Use this for initialization
 	void Start ()
     {
+        setPlayerAttacks();
+        Strength = 3;
         HP = 1500;
         MaxHP = HP;
         lifeBar.setValues(HP, MaxHP);
@@ -45,7 +50,9 @@ public class Player : MonoBehaviour {
     public void onAttackEvent()
     {
         this.rend.material = attackMaterial;
-        Debug.Log("Click");
+        Enemy attackedEnemy = getFirstEnemy();
+        if (attackedEnemy != null)
+            gameObject.GetComponent<PlayerBasicAttack>().castAttackOnEnemy(attackedEnemy);       
     }
 
     public void onAttackEndEvent()
@@ -74,4 +81,14 @@ public class Player : MonoBehaviour {
 
     }
 
+    // Get enemy component of EnemyHandler
+    private Enemy getFirstEnemy()
+    {
+        return GameObject.FindGameObjectsWithTag("Enemy")[0].transform.parent.GetComponent<Enemy>(); 
+    }
+    private void setPlayerAttacks()
+    {
+        gameObject.AddComponent<PlayerBasicAttack>();
+        gameObject.AddComponent<PlayerFireball>();
+    }
 }

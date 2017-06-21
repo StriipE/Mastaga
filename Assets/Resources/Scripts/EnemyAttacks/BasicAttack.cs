@@ -10,7 +10,7 @@ namespace Assets.Resources.Scripts.Attacks
     {
         public override float calculateDamage()
         {
-            int strength = gameObject.GetComponent<Enemy>().Strength;
+            float strength = gameObject.GetComponent<Enemy>().Strength;
             return strength * 2f;
         }
 

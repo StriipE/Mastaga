@@ -14,10 +14,16 @@ namespace Assets.Resources.Scripts
         private float timeSinceLastAttack;
         private float timeToLive = 10f;
 
-        public int HP { get; set; }
-        public int Strength { get; set; }
-        public int Dexterity { get; set; }
-        public int MagicPower { get; set; }
+        public float HP { get; set; }
+        public float Strength { get; set; }
+        public float Dexterity { get; set; }
+        public float MagicPower { get; set; }
+
+        public void getDamaged(float damage)
+        {
+            HP -= damage;
+        }
+
         public int PhysicalDefense { get; set; }
         public int MagicalDefense { get; set; }
         public float Speed { get; set; }

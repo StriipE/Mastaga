@@ -37,7 +37,7 @@ namespace Assets.Resources.Scripts.Attacks
 
         public override float calculateDamage()
         {
-            int magicPower = enemyCastingThisSpell.MagicPower;
+            float magicPower = enemyCastingThisSpell.MagicPower;
             return magicPower * SPELL_BASE_DAMAGE;
         }
 
