@@ -13,6 +13,9 @@ namespace Assets.Resources.Scripts.Enemies
         {
             EnemySprite = (GameObject) Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Spanker"));
             EnemySprite.transform.parent = gameObject.transform;
+            HP = MaxHP;
+
+            setupHPBar();
         }
 
         protected override void setAttacks()
@@ -23,7 +26,7 @@ namespace Assets.Resources.Scripts.Enemies
 
         public Spanker()
         {
-            HP = 20;
+            MaxHP = 20;
             Strength = 20;
             Dexterity = 20;
             MagicPower = 2;

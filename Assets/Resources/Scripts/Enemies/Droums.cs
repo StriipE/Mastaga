@@ -13,6 +13,9 @@ namespace Assets.Resources.Scripts.Enemies
         {
             EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Droums"));
             EnemySprite.transform.parent = gameObject.transform;
+            HP = MaxHP;
+
+            setupHPBar();
         }
 
         protected override void setAttacks()
@@ -22,7 +25,7 @@ namespace Assets.Resources.Scripts.Enemies
 
         public Droums()
         {
-            HP = 30;
+            MaxHP = 30;
             Strength = 60;
             Dexterity = 15;
             MagicPower = 10;

@@ -54,7 +54,7 @@ namespace Assets.Resources.Scripts.Attacks
 
         void OnDestroy()
         {
-          //  Destroy(AttackSprite);
+           Destroy(AttackSprite);
         }
     }
 }

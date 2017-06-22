@@ -13,6 +13,9 @@ namespace Assets.Resources.Scripts.Enemies
         {
             EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Banga"));
             EnemySprite.transform.parent = gameObject.transform;
+            HP = MaxHP;
+
+            setupHPBar();
         }
 
         protected override void setAttacks()
@@ -22,7 +25,7 @@ namespace Assets.Resources.Scripts.Enemies
 
         public Banga()
         {
-            HP = 40;
+            MaxHP = 40;
             Strength = 30;
             Dexterity = 10;
             MagicPower = 5;

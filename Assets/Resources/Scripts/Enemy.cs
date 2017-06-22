@@ -13,16 +13,14 @@ namespace Assets.Resources.Scripts
         public Player TargetPlayer;
         private float timeSinceLastAttack;
         private float timeToLive = 10f;
+        private GameObject enemyHPBarHandler;
+        private GenericProgressBar enemyHPBar;
 
         public float HP { get; set; }
+        public float MaxHP { get; set; }
         public float Strength { get; set; }
         public float Dexterity { get; set; }
         public float MagicPower { get; set; }
-
-        public void getDamaged(float damage)
-        {
-            HP -= damage;
-        }
 
         public int PhysicalDefense { get; set; }
         public int MagicalDefense { get; set; }
@@ -31,12 +29,20 @@ namespace Assets.Resources.Scripts
         public GameObject EnemySprite { get; set; }
         public Attack[] EnemyAttacks { get{ return gameObject.GetComponents<Attack>(); } }
 
+
         public void Awake()
         {
             TargetPlayer = GameObject.Find("Player").GetComponent<Player>();
             setAttacks();
             timeSinceLastAttack = 1f / AttackRate;
         }
+
+        public void getDamaged(float damage)
+        {
+            HP -= damage;
+            enemyHPBar.updateCurrent(HP);
+        }
+
 
         public virtual void moveTowardsHero()
         {
@@ -64,14 +70,33 @@ namespace Assets.Resources.Scripts
         {
             moveTowardsHero();
             timeToLive -= Time.deltaTime;
-            if (timeToLive < 0)
+            renderHPBar();
+            if (HP < 0)
                 Destroy(this);
         }
 
         public void OnDestroy()
         {
-            //Destroy(EnemySprite);
+            Destroy(enemyHPBarHandler);
             Destroy(EnemySprite.transform.parent.gameObject);
+        }
+
+        public void setupHPBar()
+        {
+            enemyHPBarHandler = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/MonsterHPBar"));
+            enemyHPBar = enemyHPBarHandler.GetComponent<GenericProgressBar>();
+            enemyHPBar.barColor = new Color32(255, 0, 0, 255);
+            enemyHPBar.setValues(HP, MaxHP);
+            enemyHPBarHandler.transform.SetParent(GameObject.Find("Canvas").transform);
+        }
+
+        public void renderHPBar()
+        {
+            Vector3 enemyHPBarPositionInCanvas = GameObject.Find("Main Camera").GetComponent<Camera>().
+                                                 WorldToScreenPoint(gameObject.transform.GetChild(0).position  // Renders HPBarPosition on Canvas
+                                                  + new Vector3(0, 0, gameObject.transform.GetChild(0).localScale.y / 2 + 2f)); // Offset z axis with enemy height
+            enemyHPBarHandler.GetComponent<RectTransform>().anchoredPosition = enemyHPBarPositionInCanvas;
+            enemyHPBar.renderValues();
         }
 
         protected abstract void setAttacks();

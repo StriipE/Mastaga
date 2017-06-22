@@ -84,7 +84,10 @@ public class Player : MonoBehaviour {
     // Get enemy component of EnemyHandler
     private Enemy getFirstEnemy()
     {
-        return GameObject.FindGameObjectsWithTag("Enemy")[0].transform.parent.GetComponent<Enemy>(); 
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length > 0)
+            return GameObject.FindGameObjectsWithTag("Enemy")[0].transform.parent.GetComponent<Enemy>();
+        else
+            return null;
     }
     private void setPlayerAttacks()
     {
