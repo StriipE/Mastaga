@@ -1,0 +1,1 @@
+﻿using System.Collections; using System.Collections.Generic; using UnityEngine;  public class Plant : MonoBehaviour {          public Material growing;     public Material alive;     public Material old;      public int growTime;     public int aliveTime;     } 

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class HarvestPopUp : MonoBehaviour {
 
-    public static HarvestPlant harvestPlant = null;
+    public static HarvestField harvestPlant = null;
+    public static HarvestPopUp popup = null;
+    private StandardPlantUI selectedPlantUI;
 
     // Use this for initialization
     void Start () {
-
-	}
+        popup = this;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -21,7 +23,7 @@ public class HarvestPopUp : MonoBehaviour {
         this.gameObject.SetActive(false);
         if (harvestPlant)
         {
-            harvestPlant.onOk();
+            harvestPlant.onOk(this.selectedPlantUI.plant);
         }
     }
 
@@ -30,8 +32,12 @@ public class HarvestPopUp : MonoBehaviour {
         this.gameObject.SetActive(false);
     }
 
-    public void onSelectPlant()
+    public void onSelectPlant(StandardPlantUI caller)
     {
-
+        if(this.selectedPlantUI)
+        {
+            this.selectedPlantUI.onDeselect();
+        }
+        this.selectedPlantUI = caller;
     }
 }

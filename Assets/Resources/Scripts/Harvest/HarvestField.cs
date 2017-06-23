@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HarvestPlant : MonoBehaviour {
+public class HarvestField : MonoBehaviour {
 
     public Renderer rend;
 
     public Material dirt;
-    public Material growing;
-    public Material alive;
-    public Material old;
-
+    public Plant plant;
     public int growTime = 10;
     public int aliveTime = 120;
 
-    enum HarvestState
+    public enum HarvestState
     {
         Dirt,
         Growing,
@@ -43,14 +40,14 @@ public class HarvestPlant : MonoBehaviour {
                     if (timer > growTime)
                     {
                         this.state = HarvestState.Alive;
-                        this.rend.material = alive;
+                        this.rend.material = plant.alive;
                     }
                     break;
                 case HarvestState.Alive:
                     if(timer > aliveTime * 0.75)
                     {
                         this.state = HarvestState.Old;
-                        this.rend.material = old;
+                        this.rend.material = plant.old;
                     }
                     break;
                 case HarvestState.Old:
@@ -74,10 +71,12 @@ public class HarvestPlant : MonoBehaviour {
     }
 
 
-    public void onOk()
+    public void onOk(Plant plant)
     {
+        if (!plant) { Debug.Log("error");  }
+        this.plant = plant;
         this.state = HarvestState.Growing;
-        this.rend.material = this.growing;
+        this.rend.material = this.plant.growing;
         this.timer = 0.0f;
     }
 
