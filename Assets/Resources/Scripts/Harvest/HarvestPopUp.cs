@@ -6,6 +6,7 @@ public class HarvestPopUp : MonoBehaviour {
 
     public static HarvestField harvestPlant = null;
     public static HarvestPopUp popup = null;
+
     private StandardPlantUI selectedPlantUI;
 
     // Use this for initialization
@@ -39,5 +40,11 @@ public class HarvestPopUp : MonoBehaviour {
             this.selectedPlantUI.onDeselect();
         }
         this.selectedPlantUI = caller;
+    }
+
+    public static bool IsOn()
+    {
+        if (!popup) return false;
+        return popup.gameObject.activeSelf;
     }
 }
