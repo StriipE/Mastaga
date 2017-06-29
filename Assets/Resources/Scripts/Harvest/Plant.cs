@@ -42,8 +42,9 @@
                 int random = (int)((Random.value * this.dropRateMax[i]) + this.dropRateMin[i]);
                 PlayerData.inventory.addItem(this.dropItems[i], random);
             }
+            master.onDrop();
+            this.droppable = false;
         }
-        this.droppable = false;
     }      private void setupNewState(GameObject plant)
     {
         this.actualMesh = Instantiate(aliveMesh);

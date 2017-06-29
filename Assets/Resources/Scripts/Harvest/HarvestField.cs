@@ -83,16 +83,18 @@ public class HarvestField : MonoBehaviour {
             HarvestPopUp.harvestPlant = this;
             Debug.Log(this.gameObject.name);
         }
-        else if(this.plant.isDroppable())
+        else if(this.plant)
         {
-            onDrop();
+            if (this.plant.isDroppable())
+            {
+                onDrop();
+            }
         }
     }
 
     public void onDrop()
     {
         this.dropTimer = 0;
-        Debug.Log("Gogogo");
     }
 
     public void onOk(Plant plant)
