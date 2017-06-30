@@ -83,7 +83,7 @@ namespace Assets.Resources.Scripts
 
         public void setupHPBar()
         {
-            enemyHPBarHandler = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/MonsterHPBar"));
+            enemyHPBarHandler = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/MonsterHPBar"));
             enemyHPBar = enemyHPBarHandler.GetComponent<GenericProgressBar>();
             enemyHPBar.barColor = new Color32(255, 0, 0, 255);
             enemyHPBar.setValues(HP, MaxHP);

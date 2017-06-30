@@ -11,7 +11,7 @@ namespace Assets.Resources.Scripts.Enemies
     {
         void Start()
         {
-            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Monsters/Banga"));
+            EnemySprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Monsters/Banga"));
             EnemySprite.transform.parent = gameObject.transform;
             HP = MaxHP;
 

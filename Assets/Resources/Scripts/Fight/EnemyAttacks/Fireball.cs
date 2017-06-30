@@ -43,7 +43,7 @@ namespace Assets.Resources.Scripts.Attacks
 
         public override void castAttackOnPlayer(Player player)
         {
-            AttackSprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Spells/Fireball"));
+            AttackSprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Spells/Fireball"));
             AttackSprite.transform.position = enemyCastingThisSpell.transform.GetChild(0).position 
                                               - new Vector3(enemyCastingThisSpell.transform.GetChild(0).localScale.x / 2f, 0, 0); // Casts fireball at current enemy position 
 
