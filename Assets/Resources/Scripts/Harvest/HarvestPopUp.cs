@@ -2,49 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HarvestPopUp : MonoBehaviour {
+public class HarvestPopUp : ClosableUI {
 
     public static HarvestField harvestPlant = null;
-    public static HarvestPopUp popup = null;
 
-    private StandardPlantUI selectedPlantUI;
+    static public PlantSelectImage selectedPlant = null;
 
-    // Use this for initialization
-    void Start () {
-        popup = this;
-    }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void onOk()
+    public override void onQuit()
     {
-        this.gameObject.SetActive(false);
+        base.onQuit();
         if (harvestPlant)
         {
-            harvestPlant.onOk(this.selectedPlantUI.plant);
+            harvestPlant.onOk(selectedPlant.plant);
         }
     }
 
-    public void onCancel()
+    public void onSelectPlant(PlantSelectImage caller)
     {
-        this.gameObject.SetActive(false);
-    }
-
-    public void onSelectPlant(StandardPlantUI caller)
-    {
-        if(this.selectedPlantUI)
+        if(selectedPlant)
         {
-            this.selectedPlantUI.onDeselect();
+            selectedPlant.onUnselect();
         }
-        this.selectedPlantUI = caller;
-    }
-
-    public static bool IsOn()
-    {
-        if (!popup) return false;
-        return popup.gameObject.activeSelf;
+        selectedPlant = caller;
     }
 }

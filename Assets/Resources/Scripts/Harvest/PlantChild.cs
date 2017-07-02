@@ -18,7 +18,7 @@ public class PlantChild : MonoBehaviour {
 
     public void OnMouseDown()
     {
-        if (this.master && !HarvestPopUp.IsOn())
+        if (this.master && !GameData.popUpActive)
         {
             this.master.OnMouseDown();
         }
