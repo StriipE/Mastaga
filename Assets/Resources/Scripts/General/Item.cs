@@ -7,7 +7,6 @@ public class Item : MonoBehaviour {
 
     public string name = null;
     public Image image = null;
-    public GameObject itemGameObject = null;
 
     public int sellPrice = 0;
     public int buyPrice = 0;

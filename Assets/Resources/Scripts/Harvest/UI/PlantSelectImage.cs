@@ -9,12 +9,9 @@ public class PlantSelectImage : SelectionnableUIElement
     
     public new void onSelect()
     {
+        if (HarvestPopUp.selectedPlant)
+            HarvestPopUp.selectedPlant.onUnselect();
         HarvestPopUp.selectedPlant = this;
         base.onSelect();
-    }
-
-    public new void onUnselect()
-    {
-        base.onUnselect();
     }
 }

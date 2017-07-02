@@ -17,6 +17,13 @@ public class HarvestPopUp : ClosableUI {
         }
     }
 
+    public void onCancel()
+    {
+        base.onQuit();
+        if (selectedPlant) selectedPlant.onUnselect();
+        selectedPlant = null;
+    }
+
     public void onSelectPlant(PlantSelectImage caller)
     {
         if(selectedPlant)

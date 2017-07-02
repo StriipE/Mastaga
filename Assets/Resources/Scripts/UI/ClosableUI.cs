@@ -15,4 +15,5 @@ public class ClosableUI : MonoBehaviour {
         GameData.popUpActive = false;
         this.gameObject.SetActive(false);
     }
+
 }

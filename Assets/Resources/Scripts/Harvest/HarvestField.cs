@@ -60,6 +60,7 @@ public class HarvestField : MonoBehaviour {
                         this.state = HarvestState.Dirt;
                         this.rend.material = dirt;
                         this.plant.onDeath();
+                        this.plant.gameObject.transform.DetachChildren();
                     }
                     break;
             }
@@ -81,7 +82,6 @@ public class HarvestField : MonoBehaviour {
         {
             GameObject.Find("UI").transform.Find("PopUpField").GetComponent<HarvestPopUp>().onActivate();
             HarvestPopUp.harvestPlant = this;
-            Debug.Log(this.gameObject.name);
         }
         else if(this.plant)
         {
@@ -100,6 +100,7 @@ public class HarvestField : MonoBehaviour {
     public void onOk(Plant plant)
     {    
         this.plant = Instantiate(plant.gameObject).GetComponent<Plant>();
+        this.plant.gameObject.transform.SetParent(this.gameObject.transform);
         this.plant.setPosition(this.gameObject.transform.position.x, this.gameObject.transform.position.z);
         this.plant.GetComponent<Plant>().master = this;
         this.growTime = this.plant.growTime;

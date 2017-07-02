@@ -12,12 +12,6 @@
     }      public void onDroppable()
     {
         this.droppable = true;
-
-        
-        
-
-        //PlayerData.inventory.addItem();
-
     }      public void onAlive()
     {
         this.gameObject.GetComponent<Renderer>().material = alive;
@@ -39,7 +33,7 @@
             //TODO : On affiche une image en particule sur l'UI, mais balek j'ai pas l'temps
             for (int i = 0; i < dropItems.Count; ++i)
             {
-                int random = (int)((Random.value * this.dropRateMax[i]) + this.dropRateMin[i]);
+                int random = (int)((Random.value * this.dropCountMax[i]) + this.dropCountMin[i]);
                 PlayerData.inventory.addItem(this.dropItems[i], random);
             }
             master.onDrop();
@@ -48,6 +42,7 @@
     }      private void setupNewState(GameObject plant)
     {
         this.actualMesh = Instantiate(aliveMesh);
+        this.actualMesh.gameObject.transform.SetParent(this.gameObject.transform.parent);
         this.actualMesh.GetComponent<PlantChild>().setMaster(this);
         this.actualMesh.transform.SetPositionAndRotation(
             new Vector3(this.transform.position.x,
