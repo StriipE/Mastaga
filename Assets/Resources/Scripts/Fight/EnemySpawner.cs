@@ -1,5 +1,4 @@
 ﻿using Assets.Resources.Scripts;
-using Assets.Resources.Scripts.Enemies;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +6,13 @@ using System;
 
 public class EnemySpawner : MonoBehaviour {
 
-    private float timeBetweenSpawns = 10.0f;
+    public GameObject[] enemySpawnList;
+    public float timeBetweenSpawns;
 
+    private float setTimeBetweenSpawns;
 	void Start () {
         spawnRandomEnemy();
+        setTimeBetweenSpawns = timeBetweenSpawns;
     }
 	
 	void Update () {
@@ -19,34 +21,15 @@ public class EnemySpawner : MonoBehaviour {
         if (timeBetweenSpawns < 0)
         {
             spawnRandomEnemy();
-            timeBetweenSpawns = 10.0f;
+            timeBetweenSpawns = setTimeBetweenSpawns;
         }
 
 	}
 
-    public void spawnEnemy<T>() where T : Enemy
-    {
-        GameObject enemyGO = new GameObject("EnemyHandler");
-        enemyGO.AddComponent<T>();
-    }
-
     private void spawnRandomEnemy()
     {
-        int random = UnityEngine.Random.Range(1, 4);
-        switch (random)
-        {
-            case 1:
-                spawnEnemy<Spanker>();
-                break;
-            case 2:
-                spawnEnemy<Banga>();
-                break;
-            case 3:
-                spawnEnemy<Droums>();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException("EnemySpawner.spawnRandomEnemy Error : Unexpected random value.");
-        }
+        int random = UnityEngine.Random.Range(1, enemySpawnList.Length);
+        Instantiate(enemySpawnList[random - 1]);
     }
 
 }

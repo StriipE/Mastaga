@@ -1,6 +1,21 @@
-﻿using System.Collections; using System.Collections.Generic; using UnityEngine;  public class Plant : Dropper {
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-    public HarvestField master = null;      public Material growing;     public Material alive;     public Material old;      private GameObject actualMesh;     public GameObject aliveMesh;     public List<Item> items;      public int growTime;     public int aliveTime;
+public class Plant : Dropper {
+
+    public HarvestField master = null;
+
+    public Material growing;
+    public Material alive;
+    public Material old;
+
+    private GameObject actualMesh;
+    public GameObject aliveMesh;
+    public List<Item> items;
+
+    public int growTime;
+    public int aliveTime;
     public int dropTime;
 
     private bool droppable = false;
@@ -9,24 +24,34 @@
     {
         this.gameObject.transform.SetPositionAndRotation(new Vector3(x, this.gameObject.transform.position.y, z), new Quaternion());
         this.gameObject.SetActive(true);
-    }      public void onDroppable()
+    }
+
+    public void onDroppable()
     {
         this.droppable = true;
-    }      public void onAlive()
+    }
+
+     public void onAlive()
     {
         this.gameObject.GetComponent<Renderer>().material = alive;
         if (aliveMesh)
         {
             setupNewState(aliveMesh);
         }
-    }      public void onOld()
+    }
+
+    public void onOld()
     {
         Destroy(actualMesh);
         this.gameObject.GetComponent<Renderer>().material = old;
-    }      public void onDeath()
+    }
+
+    public void onDeath()
     {
         Destroy(this.gameObject);
-    }      public void OnMouseDown()
+    }
+
+    public void OnMouseDown()
     {
         if (this.droppable)
         {
@@ -39,7 +64,9 @@
             master.onDrop();
             this.droppable = false;
         }
-    }      private void setupNewState(GameObject plant)
+    }
+
+    private void setupNewState(GameObject plant)
     {
         this.actualMesh = Instantiate(aliveMesh);
         this.actualMesh.gameObject.transform.SetParent(this.gameObject.transform.parent);
@@ -50,7 +77,10 @@
                 this.transform.position.z),
             new Quaternion());
         this.gameObject.SetActive(false);
-    }      public bool isDroppable()
+    }
+
+    public bool isDroppable()
     {
         return this.droppable;
-    } } 
+    }
+}
