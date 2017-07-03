@@ -29,19 +29,9 @@ public class Plant : Dropper {
     public void onDroppable()
     {
         this.droppable = true;
-<<<<<<< HEAD
-
-        
-        
-
-        //PlayerData.inventory.addItem();
-
     }
 
-    public void onAlive()
-=======
-    }      public void onAlive()
->>>>>>> Harvest
+     public void onAlive()
     {
         this.gameObject.GetComponent<Renderer>().material = alive;
         if (aliveMesh)
