@@ -68,7 +68,6 @@ public class Plant : Dropper {
             //TODO : On affiche une image en particule sur l'UI, mais balek j'ai pas l'temps
             for (int i = 0; i < dropItems.Count; ++i)
             {
-                int random = (int)((Random.value * this.dropRateMax[i]) + this.dropRateMin[i]);
                 int random = (int)((Random.value * this.dropCountMax[i]) + this.dropCountMin[i]);
                 PlayerData.inventory.addItem(this.dropItems[i], random);
             }
