@@ -58,7 +58,6 @@ public class Player : MonoBehaviour {
     public void onAttackEndEvent()
     {
         this.rend.material = standardMaterial;
-        Debug.Log("End Click");
     }
 
     public void onMagicEvent()
@@ -85,7 +84,7 @@ public class Player : MonoBehaviour {
     private Enemy getFirstEnemy()
     {
         if (GameObject.FindGameObjectsWithTag("Enemy").Length > 0)
-            return GameObject.FindGameObjectsWithTag("Enemy")[0].transform.parent.GetComponent<Enemy>();
+            return GameObject.FindGameObjectsWithTag("Enemy")[0].transform.GetComponent<Enemy>();
         else
             return null;
     }
