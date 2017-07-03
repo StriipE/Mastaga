@@ -22,7 +22,7 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-    public Item findItem(string name)
+    public Item findItemByName(string name)
     {
         return this.items.Find(x => x.gameObject.name == name);
     }

@@ -7,16 +7,13 @@ public class Dropper : MonoBehaviour {
     //Syncronisation of list is done by index
 
     public List<string> dropItems;
-    public List<int> dropRateMin;
-    public List<int> dropRateMax;
+    public List<int> dropCountMin;
+    public List<int> dropCountMax;
+    public List<float> dropRate;
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public bool willDrop(int index)
+    {
+        return dropRate[index] < Random.value;
+    }
+
 }

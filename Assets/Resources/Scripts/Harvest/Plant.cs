@@ -29,6 +29,7 @@ public class Plant : Dropper {
     public void onDroppable()
     {
         this.droppable = true;
+<<<<<<< HEAD
 
         
         
@@ -38,6 +39,9 @@ public class Plant : Dropper {
     }
 
     public void onAlive()
+=======
+    }      public void onAlive()
+>>>>>>> Harvest
     {
         this.gameObject.GetComponent<Renderer>().material = alive;
         if (aliveMesh)
@@ -65,6 +69,7 @@ public class Plant : Dropper {
             for (int i = 0; i < dropItems.Count; ++i)
             {
                 int random = (int)((Random.value * this.dropRateMax[i]) + this.dropRateMin[i]);
+                int random = (int)((Random.value * this.dropCountMax[i]) + this.dropCountMin[i]);
                 PlayerData.inventory.addItem(this.dropItems[i], random);
             }
             master.onDrop();
@@ -75,6 +80,7 @@ public class Plant : Dropper {
     private void setupNewState(GameObject plant)
     {
         this.actualMesh = Instantiate(aliveMesh);
+        this.actualMesh.gameObject.transform.SetParent(this.gameObject.transform.parent);
         this.actualMesh.GetComponent<PlantChild>().setMaster(this);
         this.actualMesh.transform.SetPositionAndRotation(
             new Vector3(this.transform.position.x,

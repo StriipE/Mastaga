@@ -24,12 +24,12 @@ public class HarvestField : MonoBehaviour {
     private HarvestState state;
     private float timer = 0.0f;
     private float dropTimer = 0.0f;
-	// Use this for initialization
+	
 	void Start () {
 		
 	}
 
-    // Update is called once per frame
+    
     void Update()
     {
         if(state != HarvestState.Dirt)
@@ -60,6 +60,7 @@ public class HarvestField : MonoBehaviour {
                         this.state = HarvestState.Dirt;
                         this.rend.material = dirt;
                         this.plant.onDeath();
+                        this.plant.gameObject.transform.DetachChildren();
                     }
                     break;
             }
@@ -77,11 +78,10 @@ public class HarvestField : MonoBehaviour {
 
     public void OnMouseDown()
     { 
-        if (this.state == HarvestState.Dirt && !HarvestPopUp.IsOn())
+        if (this.state == HarvestState.Dirt && !GameData.popUpActive)
         {
-            GameObject.Find("UI").transform.Find("PopUpField").gameObject.SetActive(true);
+            GameObject.Find("UI").transform.Find("PopUpField").GetComponent<HarvestPopUp>().onActivate();
             HarvestPopUp.harvestPlant = this;
-            Debug.Log(this.gameObject.name);
         }
         else if(this.plant)
         {
@@ -100,6 +100,7 @@ public class HarvestField : MonoBehaviour {
     public void onOk(Plant plant)
     {    
         this.plant = Instantiate(plant.gameObject).GetComponent<Plant>();
+        this.plant.gameObject.transform.SetParent(this.gameObject.transform);
         this.plant.setPosition(this.gameObject.transform.position.x, this.gameObject.transform.position.z);
         this.plant.GetComponent<Plant>().master = this;
         this.growTime = this.plant.growTime;
@@ -108,6 +109,5 @@ public class HarvestField : MonoBehaviour {
         this.rend.material = this.plant.growing;
         this.timer = 0.0f;
     }
-
     
 }
