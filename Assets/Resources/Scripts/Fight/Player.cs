@@ -12,9 +12,11 @@ public class Player : MonoBehaviour {
     public Material attackMaterial;
     public GenericProgressBar lifeBar;
     public float Strength;
+    public float MagicPower;
+    public float MaxHP;
 
     private float HP;
-    private float MaxHP;
+ 
     private Attack[] playerAttacks { get { return gameObject.GetComponents<Attack>(); } }
 
     private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
@@ -27,9 +29,7 @@ public class Player : MonoBehaviour {
 	void Start ()
     {
         setPlayerAttacks();
-        Strength = 3;
-        HP = 1500;
-        MaxHP = HP;
+        HP = MaxHP;
         lifeBar.setValues(HP, MaxHP);
     }
 
@@ -51,7 +51,7 @@ public class Player : MonoBehaviour {
     {
         this.rend.material = attackMaterial;
         Enemy attackedEnemy = getFirstEnemy();
-        if (attackedEnemy != null)
+        if (attackedEnemy != null && (attackedEnemy.transform.position.x - gameObject.transform.position.x) < 20 )
             gameObject.GetComponent<PlayerBasicAttack>().castAttackOnEnemy(attackedEnemy);       
     }
 
@@ -62,7 +62,9 @@ public class Player : MonoBehaviour {
 
     public void onMagicEvent()
     {
-
+        Enemy attackedEnemy = getFirstEnemy();
+        if (attackedEnemy != null)
+            gameObject.GetComponent<PlayerFireball>().castAttackOnEnemy(attackedEnemy);
     }
 
     public void onMagicEndEvent()
