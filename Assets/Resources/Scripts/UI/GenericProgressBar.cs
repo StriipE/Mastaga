@@ -42,7 +42,7 @@ namespace Assets.Resources.Scripts
 
         public void renderValues()
         {
-            barLabel.GetComponent<Text>().text = currentValue.ToString() + " / " + upperBound.ToString();
+            barLabel.GetComponent<Text>().text = currentValue.ToString("0.0") + " / " + upperBound.ToString("0.0");
             barForeground.GetComponent<RectTransform>().offsetMax = new Vector2( -(barSize.x - (barSize.x * (currentValue / upperBound))), barSize.y / 2);
         }
 

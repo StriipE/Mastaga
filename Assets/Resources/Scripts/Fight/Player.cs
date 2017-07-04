@@ -1,5 +1,6 @@
 ﻿using Assets.Resources.Scripts;
 using Assets.Resources.Scripts.Attacks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +12,19 @@ public class Player : MonoBehaviour {
     public Material standardMaterial;
     public Material attackMaterial;
     public GenericProgressBar lifeBar;
+    public GenericProgressBar manaBar;
     public float Strength;
     public float MagicPower;
     public float MaxHP;
+    public float MaxMP;
+    public float ManaRegeneration;
 
     private float HP;
- 
+    private float MP;
+
+    private float ONE_SECOND_TIMER = 1f;
+    private float ONE_TENTH_SECOND_TIMER = 0.1f;
+
     private Attack[] playerAttacks { get { return gameObject.GetComponents<Attack>(); } }
 
     private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
@@ -30,7 +38,9 @@ public class Player : MonoBehaviour {
     {
         setPlayerAttacks();
         HP = MaxHP;
+        MP = MaxMP;
         lifeBar.setValues(HP, MaxHP);
+        manaBar.setValues(MP, MaxMP);
     }
 
 
@@ -38,7 +48,9 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        updatePlayerRengens();
         lifeBar.renderValues();
+        manaBar.renderValues();
     }
 
     public void getDamaged(float damage)
@@ -62,9 +74,14 @@ public class Player : MonoBehaviour {
 
     public void onMagicEvent()
     {
+        PlayerFireball fireball = gameObject.GetComponent<PlayerFireball>();
         Enemy attackedEnemy = getFirstEnemy();
-        if (attackedEnemy != null)
-            gameObject.GetComponent<PlayerFireball>().castAttackOnEnemy(attackedEnemy);
+        if (attackedEnemy != null && fireball.GetMPCost() <= MP)
+        { 
+            fireball.castAttackOnEnemy(attackedEnemy);
+            MP -= fireball.GetMPCost();
+            manaBar.updateCurrent(MP);
+        }
     }
 
     public void onMagicEndEvent()
@@ -74,7 +91,19 @@ public class Player : MonoBehaviour {
 
     public void onHealEvent()
     {
+        // TODO Implement spell instead of having hardcoded logic here.
+        if (MP > 30 && HP < MaxHP)
+        {
+            if (HP + 200 < MaxHP)
+                HP += 200;
+            else
+                HP = MaxHP;
 
+            MP -= 30;
+        }
+
+        lifeBar.updateCurrent(HP);
+        manaBar.updateCurrent(MP);
     }
 
     public void onHealEndEvent()
@@ -94,5 +123,25 @@ public class Player : MonoBehaviour {
     {
         gameObject.AddComponent<PlayerBasicAttack>();
         gameObject.AddComponent<PlayerFireball>();
+    }
+
+    private void updatePlayerRengens()
+    {
+        ONE_TENTH_SECOND_TIMER -= Time.deltaTime;
+        if (ONE_TENTH_SECOND_TIMER < 0)
+        {
+            if (MP + ManaRegeneration / 10 < MaxMP)
+            {
+                MP += ManaRegeneration / 10;
+                ONE_TENTH_SECOND_TIMER = 0.1f;
+            }
+            else
+            {
+                MP = MaxMP;
+                ONE_TENTH_SECOND_TIMER = 0.1f;
+            }
+
+            manaBar.updateCurrent(MP);
+        }
     }
 }

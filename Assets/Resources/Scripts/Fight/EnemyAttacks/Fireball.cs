@@ -19,20 +19,24 @@ namespace Assets.Resources.Scripts.Attacks
             enemyCastingThisSpell = gameObject.GetComponent<Enemy>();
             playerPosition = GameObject.Find("Player").transform.position;
             playerSize = GameObject.Find("Player").transform.localScale;
+            AttackSprites = new List<GameObject>();
         }
 
         void Update()
         {
-            if (AttackSprite != null)
-            {
-                if (AttackSprite.transform.position.x > (playerPosition.x + playerSize.x / 2f))
-                    AttackSprite.transform.position = Vector3.Lerp(AttackSprite.transform.position,
-                                                                   new Vector3(AttackSprite.transform.position.x - SPELL_SPEED, 1, AttackSprite.transform.position.z),
-                                                                   SPELL_SPEED * Time.time);
-                else
-                    Destroy(AttackSprite);
+            for (int i = 0; i < AttackSprites.Count; i++)
+            { 
+                    if (AttackSprites[i].transform.position.x > (playerPosition.x + playerSize.x / 2f))
+                        AttackSprites[i].transform.position = Vector3.Lerp(AttackSprites[i].transform.position,
+                                                                       new Vector3(AttackSprites[i].transform.position.x - SPELL_SPEED, 1, AttackSprites[i].transform.position.z),
+                                                                       SPELL_SPEED * Time.time);
+                    else
+                    {
+                        Destroy(AttackSprites[i]);
+                        AttackSprites.RemoveAt(i);
+                    }
+                
             }
-
         }
 
         public override float calculateDamage()
@@ -43,9 +47,11 @@ namespace Assets.Resources.Scripts.Attacks
 
         public override void castAttackOnPlayer(Player player)
         {
-            AttackSprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Spells/Fireball"));
-            AttackSprite.transform.position = enemyCastingThisSpell.transform.position 
+            GameObject sprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Spells/Fireball"));
+            sprite.transform.position = enemyCastingThisSpell.transform.position 
                                               - new Vector3(enemyCastingThisSpell.transform.localScale.x / 2f, 0, 0); // Casts fireball at current enemy position 
+
+            AttackSprites.Add(sprite);
 
             float damage = calculateDamage();
             player.getDamaged(damage);
@@ -54,7 +60,8 @@ namespace Assets.Resources.Scripts.Attacks
 
         void OnDestroy()
         {
-           Destroy(AttackSprite);
+           foreach (GameObject sprite in AttackSprites)
+               Destroy(sprite);
         }
     }
 }

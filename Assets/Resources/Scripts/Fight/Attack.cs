@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace Assets.Resources.Scripts
 {
     public abstract class Attack : MonoBehaviour
     {
-        public GameObject AttackSprite { get; set; }
+        public List<GameObject> AttackSprites { get; set; }
         public abstract float calculateDamage();
         public virtual void castAttackOnPlayer(Player player) { }
 

@@ -14,27 +14,37 @@ namespace Assets.Resources.Scripts.Attacks
         private Vector3 enemyPosition;
         private Vector3 enemySize;
         private Player playerCastingThisSpell;
+        private GameObject enemyGO;
 
         void Start()
         {
-            GameObject enemyGO = GameObject.FindGameObjectsWithTag("Enemy")[0];
-            enemyPosition = enemyGO.transform.position;
-            enemySize = enemyGO.transform.localScale;
             playerCastingThisSpell = gameObject.GetComponent<Player>();
+            AttackSprites = new List<GameObject>();
         }
 
         void Update()
         {
-            if (AttackSprite != null)
+            for (int i = 0; i < AttackSprites.Count; i++)
             {
-                if (AttackSprite.transform.position.x < (enemyPosition.x + enemyPosition.x / 2f))
-                    AttackSprite.transform.position = Vector3.Lerp(AttackSprite.transform.position,
-                                                                   new Vector3(AttackSprite.transform.position.x + SPELL_SPEED, 1, AttackSprite.transform.position.z),
-                                                                   SPELL_SPEED * Time.time);
+                if (enemyGO != null)
+                {
+                    enemyPosition = enemyGO.transform.position;
+                    if (AttackSprites[i].transform.position.x < (enemyPosition.x - enemyGO.transform.localScale.x / 2f))
+                        AttackSprites[i].transform.position = Vector3.Lerp(AttackSprites[i].transform.position,
+                                                                       new Vector3(AttackSprites[i].transform.position.x + SPELL_SPEED, 1, AttackSprites[i].transform.position.z),
+                                                                       SPELL_SPEED * Time.time);
+                    else
+                    {
+                        Destroy(AttackSprites[i]);
+                        AttackSprites.RemoveAt(i);
+                    }
+                }
                 else
-                    Destroy(AttackSprite);
+                {
+                    Destroy(AttackSprites[i]);
+                    AttackSprites.RemoveAt(i);
+                }
             }
-
         }
 
         public override float calculateDamage()
@@ -45,18 +55,29 @@ namespace Assets.Resources.Scripts.Attacks
 
         public override void castAttackOnEnemy(Enemy enemy)
         {
-            AttackSprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Spells/Fireball"));
-            AttackSprite.transform.position = gameObject.transform.position 
+            enemyGO = GameObject.FindGameObjectsWithTag("Enemy")[0];
+            enemySize = enemyGO.transform.localScale;
+
+            GameObject sprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Spells/Fireball"));
+            sprite.transform.position = gameObject.transform.position 
                                               + new Vector3(gameObject.transform.localScale.x / 2f, 0, 0); // Casts fireball at current enemy position 
+
+            AttackSprites.Add(sprite);
 
             float damage = calculateDamage();
             enemy.getDamaged(damage);
-            Debug.Log("Casted Fireball on player for " + damage + " damage.");
+            Debug.Log("Casted Fireball on enemy for " + damage + " damage.");
         }
 
+        public float GetMPCost()
+        {
+            return MP_COST;
+        }
+        
         void OnDestroy()
         {
-          //  Destroy(AttackSprite);
+            foreach (GameObject sprite in AttackSprites)
+                Destroy(sprite);
         }
     }
 }
