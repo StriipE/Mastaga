@@ -9,7 +9,7 @@ public class PlayerData : MonoBehaviour {
     //Public non static var are only for the unity setup. 
     //Later we'll search for a non build option outside of the editor
 
-    public float money = 0;
+    public static float money = 0;
 
     public Inventory inventoryStart = null;
 

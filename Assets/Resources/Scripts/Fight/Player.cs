@@ -88,6 +88,7 @@ public class Player : MonoBehaviour {
         else
             return null;
     }
+
     private void setPlayerAttacks()
     {
         gameObject.AddComponent<PlayerBasicAttack>();
