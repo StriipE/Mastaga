@@ -57,6 +57,7 @@ public class Player : MonoBehaviour {
     {
         HP -= damage;
         lifeBar.updateCurrent(HP);
+        gameObject.AddComponent<DamageText>().renderDamage(gameObject, damage);
     }
 
     public void onAttackEvent()

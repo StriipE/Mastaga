@@ -18,6 +18,7 @@ namespace Assets.Resources.Scripts.Attacks
         {
             float damage = calculateDamage();
             player.getDamaged(damage);
+            player.gameObject.AddComponent<DamageText>().renderDamage(player.gameObject, damage);
             Debug.Log("Casted BasicAttack on player for " + damage + " damage.");
         }
     }

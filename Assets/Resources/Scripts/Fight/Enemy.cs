@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Resources.Scripts.Attacks;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +34,6 @@ namespace Assets.Resources.Scripts
         public void Awake()
         {
             TargetPlayer = GameObject.Find("Player").GetComponent<Player>();
-          //  setAttacks();
             timeSinceLastAttack = 1f / AttackRate;
             
             HP = MaxHP;
@@ -43,6 +44,7 @@ namespace Assets.Resources.Scripts
         {
             HP -= damage;
             enemyHPBar.updateCurrent(HP);
+            gameObject.AddComponent<DamageText>().renderDamage(gameObject, damage);
         }
 
 
@@ -79,7 +81,14 @@ namespace Assets.Resources.Scripts
         public void OnDestroy()
         {
             Destroy(enemyHPBarHandler);
-            Destroy(gameObject.transform.gameObject);
+            //while( gameObject.GetComponents<DamageText>().Length > 0 )
+            //{
+            //    StartCoroutine(Delay(0.1f));
+            //}
+            foreach (DamageText damageText in gameObject.GetComponents<DamageText>())
+                Destroy(damageText);
+
+            Destroy(gameObject);
         }
 
         public void setupHPBar()
@@ -100,6 +109,10 @@ namespace Assets.Resources.Scripts
             enemyHPBar.renderValues();
         }
 
+        private IEnumerator Delay(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+        }
        // protected abstract void setAttacks();
     }
 }
