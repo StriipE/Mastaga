@@ -28,7 +28,7 @@ public class EnemySpawner : MonoBehaviour {
 
     private void spawnRandomEnemy()
     {
-        int random = UnityEngine.Random.Range(1, enemySpawnList.Length);
+        int random = UnityEngine.Random.Range(1, enemySpawnList.Length + 1);
         Instantiate(enemySpawnList[random - 1]);
     }
 
