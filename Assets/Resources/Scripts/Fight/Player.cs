@@ -13,6 +13,8 @@ public class Player : MonoBehaviour {
     public Material attackMaterial;
     public GenericProgressBar lifeBar;
     public GenericProgressBar manaBar;
+    public GenericProgressBar experienceBar;
+
     public float Strength;
     public float MagicPower;
     public float MaxHP;
@@ -21,6 +23,9 @@ public class Player : MonoBehaviour {
 
     private float HP;
     private float MP;
+    private float experience;
+    private float levelUpExperience;
+    private int level;
 
     private float ONE_SECOND_TIMER = 1f;
     private float ONE_TENTH_SECOND_TIMER = 0.1f;
@@ -39,8 +44,13 @@ public class Player : MonoBehaviour {
         setPlayerAttacks();
         HP = MaxHP;
         MP = MaxMP;
+        level = 1;
+        experience = 0;
+        levelUpExperience = 10;
         lifeBar.setValues(HP, MaxHP);
         manaBar.setValues(MP, MaxMP);
+        experienceBar.setValues(experience, levelUpExperience);
+        DisplayLevel();
     }
 
 
@@ -51,6 +61,7 @@ public class Player : MonoBehaviour {
         updatePlayerRengens();
         lifeBar.renderValues();
         manaBar.renderValues();
+        experienceBar.renderValues();
     }
 
     public void getDamaged(float damage)
@@ -120,6 +131,18 @@ public class Player : MonoBehaviour {
         else
             return null;
     }
+
+    public void gainExperience(float _experience)
+    {
+        experience += _experience;
+        if (experience >= levelUpExperience)
+        {
+            levelUp();
+            experience -= levelUpExperience;
+            levelUpExperience += 10;
+        }
+        experienceBar.setValues(experience, levelUpExperience);
+    }
     private void setPlayerAttacks()
     {
         gameObject.AddComponent<PlayerBasicAttack>();
@@ -144,5 +167,24 @@ public class Player : MonoBehaviour {
 
             manaBar.updateCurrent(MP);
         }
+    }
+
+    private void levelUp()
+    {
+        level++;
+        Strength += .5f;
+        MagicPower += .5f;
+        MaxHP += 50;
+        lifeBar.updateUpper(MaxHP);
+        MaxMP += 10;
+        manaBar.updateUpper(MaxMP);
+        ManaRegeneration += .5f;
+        DisplayLevel();
+    }
+
+    private void DisplayLevel()
+    {
+        GameObject TextPlayer = GameObject.Find("TextPlayerName");
+        TextPlayer.GetComponent<Text>().text = "PlayerName - Level " + level.ToString();
     }
 }

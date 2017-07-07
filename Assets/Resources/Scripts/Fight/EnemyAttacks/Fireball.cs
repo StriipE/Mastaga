@@ -56,7 +56,6 @@ namespace Assets.Resources.Scripts.Attacks
             float damage = calculateDamage();
             player.getDamaged(damage);
             player.gameObject.AddComponent<DamageText>().renderDamage(player.gameObject, damage);
-            Debug.Log("Casted Fireball on player for " + damage + " damage.");
         }
 
         void OnDestroy()

@@ -66,7 +66,6 @@ namespace Assets.Resources.Scripts.Attacks
 
             float damage = calculateDamage();
             enemy.getDamaged(damage);
-            Debug.Log("Casted Fireball on enemy for " + damage + " damage.");
         }
 
         public float GetMPCost()

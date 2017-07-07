@@ -23,6 +23,7 @@ namespace Assets.Resources.Scripts
         public float Strength;
         public float Dexterity;
         public float MagicPower;
+        public float Experience;
 
         public int PhysicalDefense;
         public int MagicalDefense;
@@ -75,16 +76,22 @@ namespace Assets.Resources.Scripts
             moveTowardsHero();
             renderHPBar();
             if (HP <= 0)
+            {
+                rewardPlayer(TargetPlayer);
                 Destroy(this);
+            }
+
+        }
+
+        private void rewardPlayer(Player targetPlayer)
+        {
+            targetPlayer.gainExperience(Experience);
         }
 
         public void OnDestroy()
         {
             Destroy(enemyHPBarHandler);
-            //while( gameObject.GetComponents<DamageText>().Length > 0 )
-            //{
-            //    StartCoroutine(Delay(0.1f));
-            //}
+
             foreach (DamageText damageText in gameObject.GetComponents<DamageText>())
                 Destroy(damageText);
 

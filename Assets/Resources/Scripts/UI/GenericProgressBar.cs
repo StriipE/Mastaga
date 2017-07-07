@@ -40,6 +40,11 @@ namespace Assets.Resources.Scripts
             currentValue = newCurrent;
         }
 
+        public void updateUpper(float newUpper)
+        {
+            upperBound = newUpper;
+        }
+
         public void renderValues()
         {
             barLabel.GetComponent<Text>().text = currentValue.ToString("0.0") + " / " + upperBound.ToString("0.0");
