@@ -6,22 +6,83 @@ using UnityEngine.UI;
 
 public class InventoryUI : ClosableUI {
 
-    public static ItemSelectImage selectedItem;
-
+    public static InventoryUI inventoryUIinstance;
+    private ItemSelectImage selectedItem;
+    
     private List<Item> actualItems = new List<Item>();
-    public Image categoryImage = null;
+    public Image itemData = null;
     public ItemSelectImage itemBackgroundImage = null;
     public Image itemPanel = null;
     public Text itemCountText = null;
 
-    List<SelectionnableUIElement> itemElements = new List<SelectionnableUIElement>();
+    private int selectedItemCount = 1;
+        
+    List<ItemSelectImage> itemElements = new List<ItemSelectImage>();
+
+    Predicate<Item> itemCategory = x => x.count > 0;
+
+    private float refreshTimer;
+    public static float refreshTime = 1.5f;
+
+    public int itemCountPerLine = 4;
+    public int itemLineCount = 4;
+
+    private void Update()
+    {
+        if(this.gameObject.activeSelf)
+        {
+            refreshTimer += Time.deltaTime;
+            if(refreshTimer > refreshTime)
+            {
+                refresh();
+                refreshTimer = 0;
+            }
+        }
+    }
 
     public new void onActivate()
     {
+        inventoryUIinstance = this;
         if (!this.gameObject.activeSelf && !GameData.popUpActive)
         {
             base.onActivate();
-            generateItemList(x => x.count > 0);
+            refresh();
+        }
+    }
+
+    public bool refresh()
+    {
+        if (GameData.inventory.items.FindAll(itemCategory).Count == 0)
+        {
+            cleanItemList();
+            for (int i = 0; i < itemData.transform.childCount; i++)
+            {
+                itemData.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            return false;
+        }
+        else
+        {
+            for (int i = 0; i < itemData.transform.childCount; i++)
+            {
+                itemData.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            generateItemList(itemCategory);
+            return true;
+        }
+    }
+
+    public void onSelectValue()
+    {
+        if (selectedItem)
+        {
+            this.selectedItemCount = (int)itemData.transform.GetChild(3)
+                .gameObject.GetComponent<Slider>().value;
+            itemData.transform.GetChild(2).gameObject.GetComponent<Text>().text =
+                selectedItemCount.ToString() +
+                " / " + selectedItem.item.count.ToString();
+            itemData.transform.GetChild(5).gameObject.GetComponent<Text>().text =
+                (selectedItem.item.sellPrice * selectedItemCount).ToString();
         }
     }
 
@@ -34,26 +95,101 @@ public class InventoryUI : ClosableUI {
             Destroy(el.gameObject);
         }
         this.itemElements.Clear();
+        cleanItemList();
     }
 
-    public int itemCountPerLine  = 4;
-    public int itemLineCount = 4;
-    public void generateItemList(Predicate<Item> predicate)
+    public void selectElement(ItemSelectImage item)
     {
-        actualItems.Clear(); 
+        this.selectedItem = item;
+        printItemData(item.item);
+    }
+
+    public ItemSelectImage getSelectedItem()
+    {
+        return this.selectedItem;
+    }
+
+    private void printItemData(Item item)
+    {
+        itemData.transform.GetChild(0).gameObject.GetComponent<Image>().color = item.image.color;
+        itemData.transform.GetChild(1).gameObject.GetComponent<Text>().text = item.name;
+        itemData.transform.GetChild(2).gameObject.GetComponent<Text>().text = 
+            "1 / " + item.count.ToString();
+        itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().maxValue = item.count;
+        itemData.transform.GetChild(5).gameObject.GetComponent<Text>().text = 
+            (item.sellPrice * selectedItemCount).ToString();
+    }
+
+    private void sellItem()
+    {
+        if(selectedItem)
+        {
+            this.selectedItem.item.count -= selectedItemCount;
+            GameData.money.addMoney(selectedItemCount * selectedItem.item.sellPrice);
+            
+            selectedItemCount = selectedItem.item.count > 0 ? 1 : 0;
+            itemData.transform.GetChild(2).gameObject.GetComponent<Text>().text =
+                selectedItemCount + " / " + 
+                selectedItem.item.count.ToString();
+            itemData.transform.GetChild(5).gameObject.GetComponent<Text>().text =
+                selectedItem.item.sellPrice.ToString();
+            itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().value = 1;
+            itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().maxValue = 
+                selectedItem.item.count;
+            if(selectedItem.item.count == 0)
+            {
+                refresh();
+            }
+        }
+    }
+
+    private void cleanItemList()
+    {
+        this.itemPanel.gameObject.transform.DetachChildren();
+        foreach (SelectionnableUIElement el in this.itemElements)
+        {
+            Destroy(el.gameObject);
+        }
+        this.itemElements.Clear();
+        actualItems.Clear();
+        itemData.transform.GetChild(0).gameObject.GetComponent<Image>().color = Color.white;
+        itemData.transform.GetChild(1).gameObject.GetComponent<Text>().text = "";
+        itemData.transform.GetChild(2).gameObject.GetComponent<Text>().text = "";
+        itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().maxValue = 0;
+        itemData.transform.GetChild(5).gameObject.GetComponent<Text>().text = "";
+    }
+
+    private void generateItemList(Predicate<Item> predicate)
+    {
+        if(itemElements.Count > 0)
+        {
+            return;
+        }
+        selectedItem = null;
 
         int count = 0;
         
-        actualItems = PlayerData.inventory.items.FindAll(predicate);
+        actualItems = GameData.inventory.items.FindAll(predicate);
+        bool first = true;
         foreach (Item item in actualItems)
         {
-            Debug.Log(this.itemPanel.gameObject.transform.childCount + " " + item.name);
             if (count >= itemCountPerLine * itemLineCount) break;
             int x = count % itemCountPerLine * 95;
             int y = count / itemCountPerLine * -95;
             ItemSelectImage el = Instantiate(itemBackgroundImage);
+
             el.item = item;
             el.gameObject.transform.SetParent(this.itemPanel.gameObject.transform, false);
+            if (first)
+            {
+                if (!selectedItem)
+                {
+                    selectedItem = el;
+                }
+                first = false;
+                this.selectedItem = el;
+                el.onSelect();
+            }
 
             Image itemImage = Instantiate(el.item.image);
             itemImage.gameObject.transform.SetParent(el.gameObject.transform, false);
@@ -66,6 +202,7 @@ public class InventoryUI : ClosableUI {
             el.gameObject.transform.Translate(x, y, 0);
 
             ++count;
+            
         }
     }
 }

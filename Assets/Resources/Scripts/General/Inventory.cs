@@ -3,22 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour {
+public class Inventory {
     
     public List<Item> items;
     
+    public Inventory(List<Item> startItems)
+    {
+        items = new List<Item>(startItems);
+    }
+
     public void addItem(String item, int count)
     {
         Item itemBuffer = this.items.Find(x => x.name == item);
 
         if (itemBuffer == null)
         {
-            throw new Exception("Add the base item named or check name from looter: " + item);
+            Item i = Resources.Load<Item>("Prefabs/Items/"+ item) as Item;
+            i.count = count;
+            items.Add(i);
         }
         else
         {
             itemBuffer.count += count;
-            Debug.Log(item + " = " + itemBuffer.count);
         }
     }
 

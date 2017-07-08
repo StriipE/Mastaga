@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Item : MonoBehaviour {
 
+    public ICountObserver observer = null;
+
     public string name = null;
     public Image image = null;
 
@@ -24,5 +26,13 @@ public class Item : MonoBehaviour {
 
     //Fight Mode
     public bool weapon = false;
+
+    protected void onAdd(float count)
+    {
+        if(observer != null)
+        {
+            observer.notify(count);
+        }
+    }
 
 }

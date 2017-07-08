@@ -143,6 +143,7 @@ public class Player : MonoBehaviour {
         }
         experienceBar.setValues(experience, levelUpExperience);
     }
+
     private void setPlayerAttacks()
     {
         gameObject.AddComponent<PlayerBasicAttack>();

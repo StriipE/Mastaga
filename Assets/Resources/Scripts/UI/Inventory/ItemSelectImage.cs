@@ -8,10 +8,9 @@ public class ItemSelectImage : SelectionnableUIElement {
 
     public new void onSelect()
     {
-        if (InventoryUI.selectedItem)
-            InventoryUI.selectedItem.onUnselect();
-        InventoryUI.selectedItem = this;
+        if (InventoryUI.inventoryUIinstance.getSelectedItem())
+            InventoryUI.inventoryUIinstance.getSelectedItem().onUnselect();
+        InventoryUI.inventoryUIinstance.selectElement(this);
         base.onSelect();
     }
-
 }
