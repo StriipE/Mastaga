@@ -12,7 +12,6 @@ public class Plant : Dropper {
 
     private GameObject actualMesh;
     public GameObject aliveMesh;
-    public List<Item> items;
 
     public int growTime;
     public int aliveTime;

@@ -8,10 +8,9 @@ public class GameData : MonoBehaviour {
     public static bool popUpActive = false;
     public static TimeHandler timeHandler = null;
     
-
     public static Money money = null;
     public static Inventory inventory = null;
-
+    public static int actualMapFieldId;
     //TUNING
     public float startHour = 12;
     public float realTimeAcceleration = 10;

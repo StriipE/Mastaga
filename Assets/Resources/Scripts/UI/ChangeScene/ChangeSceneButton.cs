@@ -11,4 +11,9 @@ public class ChangeSceneButton : MonoBehaviour {
     {
         SceneManager.LoadScene(sceneDestination);
     }
+
+    public void OnMouseDown()
+    {
+        SceneManager.LoadScene(sceneDestination);
+    }
 }
