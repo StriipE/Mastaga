@@ -52,15 +52,21 @@ public class InventoryUI : ClosableUI {
 
     public bool refresh()
     {
-        if (PlayerData.inventory.items.FindAll(itemCategory).Count == 0)
+        if (GameData.inventory.items.FindAll(itemCategory).Count == 0)
         {
             cleanItemList();
-            itemData.gameObject.SetActive(false);
+            for (int i = 0; i < itemData.transform.childCount; i++)
+            {
+                itemData.transform.GetChild(i).gameObject.SetActive(false);
+            }
             return false;
         }
         else
         {
-            itemData.gameObject.SetActive(true);
+            for (int i = 0; i < itemData.transform.childCount; i++)
+            {
+                itemData.transform.GetChild(i).gameObject.SetActive(true);
+            }
             generateItemList(itemCategory);
             return true;
         }
@@ -110,7 +116,6 @@ public class InventoryUI : ClosableUI {
         itemData.transform.GetChild(2).gameObject.GetComponent<Text>().text = 
             "1 / " + item.count.ToString();
         itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().maxValue = item.count;
-        //itemData.transform.GetChild(4).gameObject.GetComponent<Image>().color = item.image.color;
         itemData.transform.GetChild(5).gameObject.GetComponent<Text>().text = 
             (item.sellPrice * selectedItemCount).ToString();
     }
@@ -120,18 +125,17 @@ public class InventoryUI : ClosableUI {
         if(selectedItem)
         {
             this.selectedItem.item.count -= selectedItemCount;
-            PlayerData.money += selectedItemCount * selectedItem.item.sellPrice;
+            GameData.money.addMoney(selectedItemCount * selectedItem.item.sellPrice);
+            
             selectedItemCount = selectedItem.item.count > 0 ? 1 : 0;
-            //Set count
             itemData.transform.GetChild(2).gameObject.GetComponent<Text>().text =
-                selectedItemCount.ToString() + " / " + selectedItem.item.count.ToString();
+                selectedItemCount + " / " + 
+                selectedItem.item.count.ToString();
             itemData.transform.GetChild(5).gameObject.GetComponent<Text>().text =
                 selectedItem.item.sellPrice.ToString();
-            itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().value = selectedItemCount;
+            itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().value = 1;
             itemData.transform.GetChild(3).gameObject.GetComponent<Slider>().maxValue = 
                 selectedItem.item.count;
-            //TODO SET MONEY
-            Debug.Log("Money = " + PlayerData.money);
             if(selectedItem.item.count == 0)
             {
                 refresh();
@@ -157,12 +161,15 @@ public class InventoryUI : ClosableUI {
 
     private void generateItemList(Predicate<Item> predicate)
     {
-        cleanItemList();
+        if(itemElements.Count > 0)
+        {
+            return;
+        }
         selectedItem = null;
 
         int count = 0;
         
-        actualItems = PlayerData.inventory.items.FindAll(predicate);
+        actualItems = GameData.inventory.items.FindAll(predicate);
         bool first = true;
         foreach (Item item in actualItems)
         {
@@ -175,6 +182,10 @@ public class InventoryUI : ClosableUI {
             el.gameObject.transform.SetParent(this.itemPanel.gameObject.transform, false);
             if (first)
             {
+                if (!selectedItem)
+                {
+                    selectedItem = el;
+                }
                 first = false;
                 this.selectedItem = el;
                 el.onSelect();
@@ -191,7 +202,7 @@ public class InventoryUI : ClosableUI {
             el.gameObject.transform.Translate(x, y, 0);
 
             ++count;
+            
         }
     }
-
 }

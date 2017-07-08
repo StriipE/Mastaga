@@ -59,7 +59,7 @@ public class Plant : Dropper {
             for (int i = 0; i < dropItems.Count; ++i)
             {
                 int random = (int)((Random.value * this.dropCountMax[i]) + this.dropCountMin[i]);
-                PlayerData.inventory.addItem(this.dropItems[i], random);
+                GameData.inventory.addItem(this.dropItems[i], random);
             }
             master.onDrop();
             this.droppable = false;
