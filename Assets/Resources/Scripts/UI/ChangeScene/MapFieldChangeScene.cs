@@ -7,6 +7,11 @@ public class MapFieldChangeScene : ChangeSceneButton {
 
     public int fieldId = 1;
 
+    private void Start()
+    {
+        
+    }
+
     public new void onButtonClick()
     {
         GameData.actualMapFieldId = fieldId;

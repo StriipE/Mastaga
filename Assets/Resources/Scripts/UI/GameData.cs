@@ -11,11 +11,18 @@ public class GameData : MonoBehaviour {
     public static Money money = null;
     public static Inventory inventory = null;
     public static int actualMapFieldId;
+    private static Dictionary<int, System.Object> mapDataIndex = new Dictionary<int, object>();
     //TUNING
     public float startHour = 12;
     public float realTimeAcceleration = 10;
     public float startMoney = 0;
     public List<Item> startItems;
+
+    public enum FieldType
+    {
+        None, //=> Fight
+        Harvest
+    }
 
     private void Start()
     {
@@ -30,11 +37,23 @@ public class GameData : MonoBehaviour {
         }
     }
 
+    public static bool mapDataExist()
+    {
+        return mapDataIndex.ContainsKey(actualMapFieldId);
+    }
+
+    public static System.Object getMapFieldData()
+    {
+        return mapDataIndex[actualMapFieldId];
+    }
+
+    public static void setMapFieldData(System.Object data)
+    {
+        mapDataIndex[actualMapFieldId] = data;
+    }
+
     private void Update()
     {
         timeHandler.Update();
     }
-
-
-
 }

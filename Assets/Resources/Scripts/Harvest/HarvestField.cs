@@ -12,7 +12,7 @@ public class HarvestField : MonoBehaviour {
     private int growTime = 10;
     private int aliveTime = 120;
     private int dropTime = 1;
-
+    public int fieldId = 0;
     public enum HarvestState
     {
         Dirt,
@@ -25,13 +25,32 @@ public class HarvestField : MonoBehaviour {
     private float timer = 0.0f;
     private float dropTimer = 0.0f;
 	
-	void Start () {
-		
-	}
+	void Start ()
+    {
+        if (GameData.mapDataExist())
+        {
+            List<HarvestField> zoneObject = (List<HarvestField>)GameData.getMapFieldData();
 
+            //TODO changesystem to calculate deltatime on scene.
+            zoneObject = new List<HarvestField>();
+            GameData.setMapFieldData(zoneObject);
+            HarvestField field = zoneObject[fieldId];
+            if (field)
+            {
+                field = Instantiate(field);
+                field.transform.parent = this.transform.parent;
+                Destroy(this);
+            }
+            else
+            {
+                zoneObject.Add(this);
+            }
+        }
+    }
     
     void Update()
     {
+        Debug.Log("HarvestField");
         if(state != HarvestState.Dirt)
         {
             timer += Time.deltaTime;
