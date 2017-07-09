@@ -13,7 +13,13 @@ public class Dropper : MonoBehaviour {
 
     public bool willDrop(int index)
     {
-        return dropRate[index] < Random.value;
+        return dropRate[index] >= Random.value;
     }
 
+    public void renderDrop(int index)
+    {
+        GameObject dropedItem = Instantiate(Resources.Load("Prefabs/Items/" + dropItems[index], typeof(GameObject))) as GameObject;
+
+        dropedItem.transform.position = gameObject.transform.position - new Vector3(0, 0, gameObject.transform.localScale.z / 2);
+    }
 }

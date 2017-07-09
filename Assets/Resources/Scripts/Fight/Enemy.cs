@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.Resources.Scripts
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : Dropper
     {
         public const int MINIMAL_DISTANCE_TO_HERO = 15;
 
@@ -86,6 +86,10 @@ namespace Assets.Resources.Scripts
         private void rewardPlayer(Player targetPlayer)
         {
             targetPlayer.gainExperience(Experience);
+            for (int i = 0; i < dropItems.Count; i++)
+                if( willDrop(i) )
+                    renderDrop(i);
+
         }
 
         public void OnDestroy()

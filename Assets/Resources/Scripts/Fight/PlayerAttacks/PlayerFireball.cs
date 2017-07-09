@@ -11,8 +11,9 @@ namespace Assets.Resources.Scripts.Attacks
         private const float SPELL_BASE_DAMAGE = 1.5f;
         private const float SPELL_SPEED = .4f;
         private const float MP_COST = 10;
+
         private Vector3 enemyPosition;
-        private Vector3 enemySize;
+
         private Player playerCastingThisSpell;
         private GameObject enemyGO;
 
@@ -56,7 +57,6 @@ namespace Assets.Resources.Scripts.Attacks
         public override void castAttackOnEnemy(Enemy enemy)
         {
             enemyGO = GameObject.FindGameObjectsWithTag("Enemy")[0];
-            enemySize = enemyGO.transform.localScale;
 
             GameObject sprite = (GameObject)Instantiate(UnityEngine.Resources.Load(@"Prefabs/Fight/Spells/Fireball"));
             sprite.transform.position = gameObject.transform.position 
