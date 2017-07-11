@@ -5,8 +5,7 @@ using UnityEngine;
 public class Plant : Dropper {
 
     public HarvestField master = null;
-
-    public Material growing;
+    
     public Material alive;
     public Material old;
 
@@ -29,7 +28,6 @@ public class Plant : Dropper {
     {
         this.droppable = true;
     }
-
      public void onAlive()
     {
         this.gameObject.GetComponent<Renderer>().material = alive;
@@ -41,7 +39,10 @@ public class Plant : Dropper {
 
     public void onOld()
     {
-        Destroy(actualMesh);
+        if (actualMesh)
+        {
+            Destroy(actualMesh);
+        }
         this.gameObject.GetComponent<Renderer>().material = old;
     }
 

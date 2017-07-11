@@ -11,18 +11,12 @@ public class GameData : MonoBehaviour {
     public static Money money = null;
     public static Inventory inventory = null;
     public static int actualMapFieldId;
-    private static Dictionary<int, System.Object> mapDataIndex = new Dictionary<int, object>();
+    private static Dictionary<int, State> mapStates = new Dictionary<int, State>();
     //TUNING
     public float startHour = 12;
     public float realTimeAcceleration = 10;
     public float startMoney = 0;
     public List<Item> startItems;
-
-    public enum FieldType
-    {
-        None, //=> Fight
-        Harvest
-    }
 
     private void Start()
     {
@@ -34,26 +28,36 @@ public class GameData : MonoBehaviour {
                 realTimeAcceleration);
             inventory = new Inventory(startItems);
             money = new Money(startMoney);
-        }
+
+            //STUB FOR HARVEST TEST
+            for (int i = 0; i < 16; i++)
+            {
+                mapStates.Add(i, new HarvestState());
+            }
+        }        
     }
 
     public static bool mapDataExist()
     {
-        return mapDataIndex.ContainsKey(actualMapFieldId);
+        return mapStates.ContainsKey(actualMapFieldId);
     }
 
-    public static System.Object getMapFieldData()
+    public static State getMapFieldData()
     {
-        return mapDataIndex[actualMapFieldId];
+        return mapStates[actualMapFieldId];
     }
 
-    public static void setMapFieldData(System.Object data)
+    public static void setMapFieldData(State data)
     {
-        mapDataIndex[actualMapFieldId] = data;
+        mapStates[actualMapFieldId] = data;
     }
 
     private void Update()
     {
         timeHandler.Update();
+        foreach (State state in mapStates.Values)
+        {
+            state.Update();
+        }
     }
 }

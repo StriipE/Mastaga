@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,85 +10,69 @@ public class HarvestField : MonoBehaviour {
 
     public Material dirt;
     public Plant plant;
-    private int growTime = 10;
-    private int aliveTime = 120;
-    private int dropTime = 1;
-    public int fieldId = 0;
-    public enum HarvestState
-    {
-        Dirt,
-        Growing,
-        Alive,
-        Old
-    }
+    public int fieldId = -1;
 
-    private HarvestState state;
-    private float timer = 0.0f;
-    private float dropTimer = 0.0f;
-	
-	void Start ()
+    public FieldState state;
+
+    //STUB FOR TEST
+
+    private static bool isSetup = false;
+
+    private void Start()
     {
-        if (GameData.mapDataExist())
+        if(!isSetup)
         {
-            List<HarvestField> zoneObject = (List<HarvestField>)GameData.getMapFieldData();
-
-            //TODO changesystem to calculate deltatime on scene.
-            zoneObject = new List<HarvestField>();
-            GameData.setMapFieldData(zoneObject);
-            HarvestField field = zoneObject[fieldId];
-            if (field)
-            {
-                field = Instantiate(field);
-                field.transform.parent = this.transform.parent;
-                Destroy(this);
-            }
-            else
-            {
-                zoneObject.Add(this);
-            }
+            isSetup = true;
+            GameData.setMapFieldData(new HarvestState());
         }
+        this.state = ((HarvestState)GameData.getMapFieldData()).fields[fieldId];
+        if(this.state.plantPrefabPath != null)
+        {
+            setPlantAfterStart();
+        }
+        updateState();
     }
-    
+
     void Update()
     {
-        Debug.Log("HarvestField");
-        if(state != HarvestState.Dirt)
-        {
-            timer += Time.deltaTime;
+        updateState();
+    }
 
-            switch (state)
+    private void updateState()
+    {
+        if (this.state.harvestState != FieldState.HarvestStatus.Dirt)
+        {
+            switch (this.state.harvestState)
             {
-                case HarvestState.Growing:
-                    if (timer > growTime)
+                case FieldState.HarvestStatus.Growing:
+                    if (this.state.timer > this.plant.growTime)
                     {
-                        this.state = HarvestState.Alive;
-                        this.rend.material = plant.alive;
+                        this.state.harvestState = FieldState.HarvestStatus.Alive;
                         this.plant.onAlive();
                     }
                     break;
-                case HarvestState.Alive:
-                    if(timer > aliveTime * 0.75)
+                case FieldState.HarvestStatus.Alive:
+                    if (this.state.timer > this.plant.aliveTime * 0.75)
                     {
-                        this.state = HarvestState.Old;
-                        this.rend.material = plant.old;
+                        this.state.harvestState = FieldState.HarvestStatus.Old;
                         this.plant.onOld();
                     }
                     break;
-                case HarvestState.Old:
-                    if (timer > aliveTime)
+                case FieldState.HarvestStatus.Old:
+                    if (this.state.timer > this.plant.aliveTime)
                     {
-                        this.state = HarvestState.Dirt;
-                        this.rend.material = dirt;
+                        this.state.harvestState = FieldState.HarvestStatus.Dirt;
+                        this.state.plantPrefabPath = null;
                         this.plant.onDeath();
                         this.plant.gameObject.transform.DetachChildren();
                     }
                     break;
             }
 
-            if(this.state != HarvestState.Growing)
+            if (this.state.harvestState != FieldState.HarvestStatus.Growing)
             {
-                this.dropTimer += Time.deltaTime;
-                if(this.dropTimer >= this.dropTime)
+                this.state.dropTimer += Time.deltaTime;
+                if (this.state.dropTimer >= this.plant.dropTime)
                 {
                     this.plant.onDroppable();
                 }
@@ -97,7 +82,7 @@ public class HarvestField : MonoBehaviour {
 
     public void OnMouseDown()
     { 
-        if (this.state == HarvestState.Dirt && !GameData.popUpActive)
+        if (this.state.harvestState == FieldState.HarvestStatus.Dirt && !GameData.popUpActive)
         {
             GameObject.Find("UI").transform.Find("PopUpField").GetComponent<HarvestPopUp>().onActivate();
             HarvestPopUp.harvestPlant = this;
@@ -113,20 +98,51 @@ public class HarvestField : MonoBehaviour {
 
     public void onDrop()
     {
-        this.dropTimer = 0;
+        this.state.dropTimer = 0;
     }
 
     public void onOk(Plant plant)
-    {    
-        this.plant = Instantiate(plant.gameObject).GetComponent<Plant>();
+    {
+
+        this.state.plantPrefabPath = State.getPrefabPath(plant.gameObject);
+        setupPlant();
+        this.state.harvestState = FieldState.HarvestStatus.Growing;
+        this.state.timer = 0.0f;
+    }
+
+    private void setPlantAfterStart()
+    {
+        setupPlant();
+        if (this.state.timer > this.plant.aliveTime * 0.75)
+        {
+            this.state.harvestState = FieldState.HarvestStatus.Old;
+            this.plant.onOld();
+        }
+        else if (this.state.timer > this.plant.aliveTime)
+        {
+            this.state.harvestState = FieldState.HarvestStatus.Dirt;
+            this.state.plantPrefabPath = null;
+            this.plant.onDeath();
+            this.plant.gameObject.transform.DetachChildren();
+        }
+        else if (this.state.timer > this.plant.growTime)
+        {
+            this.state.harvestState = FieldState.HarvestStatus.Alive;
+            this.plant.onAlive();
+        }
+        else
+        {
+            this.state.harvestState = FieldState.HarvestStatus.Growing;
+            this.state.timer = 0.0f;
+        }
+    }
+
+    public void setupPlant()
+    {
+        this.plant = Instantiate<Plant>(Resources.Load<Plant>(this.state.plantPrefabPath));
         this.plant.gameObject.transform.SetParent(this.gameObject.transform);
         this.plant.setPosition(this.gameObject.transform.position.x, this.gameObject.transform.position.z);
         this.plant.GetComponent<Plant>().master = this;
-        this.growTime = this.plant.growTime;
-        this.aliveTime = this.plant.aliveTime;
-        this.state = HarvestState.Growing;
-        this.rend.material = this.plant.growing;
-        this.timer = 0.0f;
     }
     
 }
