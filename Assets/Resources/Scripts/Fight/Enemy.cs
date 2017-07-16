@@ -30,8 +30,7 @@ namespace Assets.Resources.Scripts
         public float Speed;
         public float AttackRate;
         public Attack[] EnemyAttacks;
-
-
+        
         public void Awake()
         {
             TargetPlayer = GameObject.Find("Player").GetComponent<Player>();
@@ -47,8 +46,7 @@ namespace Assets.Resources.Scripts
             enemyHPBar.updateCurrent(HP);
             gameObject.AddComponent<DamageText>().renderDamage(gameObject, damage);
         }
-
-
+        
         public virtual void moveTowardsHero()
         {
             if (gameObject.transform.position.x > MINIMAL_DISTANCE_TO_HERO)
@@ -108,7 +106,7 @@ namespace Assets.Resources.Scripts
             enemyHPBar = enemyHPBarHandler.GetComponent<GenericProgressBar>();
             enemyHPBar.barColor = new Color32(255, 0, 0, 255);
             enemyHPBar.setValues(HP, MaxHP);
-            enemyHPBarHandler.transform.SetParent(GameObject.Find("Canvas").transform);
+            enemyHPBarHandler.transform.SetParent(GameObject.Find("NPData").transform);
         }
 
         public void renderHPBar()

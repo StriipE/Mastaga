@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,8 +49,13 @@ public class InventoryUI : ClosableUI {
         }
     }
 
-    public bool refresh()
+    public void refresh()
     {
+        bool selectItemEmpty = false;
+        if(selectedItem)
+        {
+            selectItemEmpty = selectedItem.item.count == 0;
+        }
         if (GameData.inventory.items.FindAll(itemCategory).Count == 0)
         {
             cleanItemList();
@@ -59,16 +63,20 @@ public class InventoryUI : ClosableUI {
             {
                 itemData.transform.GetChild(i).gameObject.SetActive(false);
             }
-            return false;
+        }
+        else if(selectItemEmpty)
+        {
+            cleanItemList();
+            generateItemList(itemCategory);
         }
         else
         {
+            cleanItemList();
             for (int i = 0; i < itemData.transform.childCount; i++)
             {
                 itemData.transform.GetChild(i).gameObject.SetActive(true);
             }
             generateItemList(itemCategory);
-            return true;
         }
     }
 
@@ -182,12 +190,7 @@ public class InventoryUI : ClosableUI {
             el.gameObject.transform.SetParent(this.itemPanel.gameObject.transform, false);
             if (first)
             {
-                if (!selectedItem)
-                {
-                    selectedItem = el;
-                }
                 first = false;
-                this.selectedItem = el;
                 el.onSelect();
             }
 
@@ -202,7 +205,6 @@ public class InventoryUI : ClosableUI {
             el.gameObject.transform.Translate(x, y, 0);
 
             ++count;
-            
         }
     }
 }

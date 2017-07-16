@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Plant : Dropper {
 
@@ -11,6 +12,8 @@ public class Plant : Dropper {
 
     private GameObject actualMesh;
     public GameObject aliveMesh;
+    private GameObject dropText = null;
+    private Text dropTextComp;
 
     public int growTime;
     public int aliveTime;
@@ -27,6 +30,21 @@ public class Plant : Dropper {
     public void onDroppable()
     {
         this.droppable = true;
+        if (dropText == null)
+        {
+            GameObject canvas = GameObject.Find("NPData");
+            dropText = new GameObject("DroppableText");
+            dropText.transform.SetParent(canvas.transform);
+           
+            dropTextComp = dropText.AddComponent<Text>();
+            dropTextComp.text = "!";
+            dropTextComp.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            dropTextComp.fontSize = 30;
+            dropText.transform.position = GameObject.Find("Main Camera").GetComponent<Camera>().
+                                                 WorldToScreenPoint(transform.position +
+                                                 new Vector3(1.5f, 0, 0));
+            
+        }
     }
      public void onAlive()
     {
@@ -55,13 +73,13 @@ public class Plant : Dropper {
     {
         if (this.droppable)
         {
-            //TODO : On affiche une image en particule sur l'UI, mais balek j'ai pas l'temps
+            Destroy(dropText);
             for (int i = 0; i < dropItems.Count; ++i)
             {
                 int random = (int)((Random.value * this.dropCountMax[i]) + this.dropCountMin[i]);
                 GameData.inventory.addItem(this.dropItems[i], random);
+                master.onDrop(this.dropItems[i] + "(" + random + ")");
             }
-            master.onDrop();
             this.droppable = false;
         }
     }

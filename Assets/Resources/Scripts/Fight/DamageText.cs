@@ -19,7 +19,7 @@ namespace Assets.Resources.Scripts.Attacks
 
         public void renderDamage(GameObject target, float damage)
         {
-            GameObject canvas = GameObject.Find("Canvas");
+            GameObject canvas = GameObject.Find("NPData");
             GameObject damageTextGO = new GameObject("Damage Text Handler");
 
             damageTextGO.transform.SetParent(canvas.transform);

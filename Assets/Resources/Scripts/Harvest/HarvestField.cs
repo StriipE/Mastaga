@@ -14,6 +14,7 @@ public class HarvestField : MonoBehaviour {
 
     public FieldState state;
 
+    private List<ParticuleText> dropParticules = new List<ParticuleText>();
     //STUB FOR TEST
 
     private static bool isSetup = false;
@@ -35,7 +36,20 @@ public class HarvestField : MonoBehaviour {
 
     void Update()
     {
+        ParticuleText dropParticulesRemoved = null;
         updateState();
+        foreach (ParticuleText particule in dropParticules)
+        {
+            if(particule.isOver())
+            {
+                dropParticulesRemoved = particule;
+            }
+            particule.Update();
+        }
+        if (dropParticulesRemoved != null)
+        {
+            dropParticules.Remove(dropParticulesRemoved);
+        }
     }
 
     private void updateState()
@@ -91,14 +105,15 @@ public class HarvestField : MonoBehaviour {
         {
             if (this.plant.isDroppable())
             {
-                onDrop();
+                this.plant.OnMouseDown();
             }
         }
     }
 
-    public void onDrop()
+    public void onDrop(string dropText)
     {
         this.state.dropTimer = 0;
+        dropParticules.Add(new ParticuleText(this.plant.gameObject, dropText, 1));
     }
 
     public void onOk(Plant plant)

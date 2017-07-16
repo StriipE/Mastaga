@@ -17,57 +17,52 @@ public class Player : MonoBehaviour {
 
     public float Strength;
     public float MagicPower;
-    public float MaxHP;
-    public float MaxMP;
     public float ManaRegeneration;
 
-    private float HP;
-    private float MP;
-    private float experience;
-    private float levelUpExperience;
-    private int level;
-
-    private float ONE_SECOND_TIMER = 1f;
-    private float ONE_TENTH_SECOND_TIMER = 0.1f;
-
+    public float MaxHP;
+    public float MaxMP;
+    
     private Attack[] playerAttacks { get { return gameObject.GetComponents<Attack>(); } }
 
-    private Dictionary<string, float> cooldowns = new Dictionary<string, float>();
-	
-    void Awake()
-    {
-
-    }
     // Use this for initialization
 	void Start ()
     {
+        if(GameData.playerFightState == null)
+        {
+            GameData.playerFightState = new FightState();
+            GameData.playerFightState.HP = MaxHP;
+            GameData.playerFightState.MP = MaxMP;
+            GameData.playerFightState.Strength = Strength;
+            GameData.playerFightState.MagicPower = MagicPower;
+            GameData.playerFightState.ManaRegeneration = ManaRegeneration;
+            GameData.playerFightState.MaxHP = MaxHP;
+            GameData.playerFightState.MaxMP = MaxMP;
+            GameData.playerFightState.level = 1;
+            GameData.playerFightState.experience = 0;
+            GameData.playerFightState.levelUpExperience = 10;
+        }
         setPlayerAttacks();
-        HP = MaxHP;
-        MP = MaxMP;
-        level = 1;
-        experience = 0;
-        levelUpExperience = 10;
-        lifeBar.setValues(HP, MaxHP);
-        manaBar.setValues(MP, MaxMP);
-        experienceBar.setValues(experience, levelUpExperience);
+        experienceBar.setValues(GameData.playerFightState.experience, GameData.playerFightState.levelUpExperience);
         DisplayLevel();
+        lifeBar.setValues(GameData.playerFightState.HP, GameData.playerFightState.MaxHP);
+        manaBar.setValues(GameData.playerFightState.MP, GameData.playerFightState.MaxMP);
     }
-
-
+    
 	// Use this for initialization
 	
 	// Update is called once per frame
 	void Update () {
-        updatePlayerRengens();
+        lifeBar.updateCurrent(GameData.playerFightState.HP);
         lifeBar.renderValues();
+        manaBar.updateCurrent(GameData.playerFightState.MP);
         manaBar.renderValues();
         experienceBar.renderValues();
     }
 
     public void getDamaged(float damage)
     {
-        HP -= damage;
-        lifeBar.updateCurrent(HP);
+        GameData.playerFightState.HP -= damage;
+        lifeBar.updateCurrent(GameData.playerFightState.HP);
         gameObject.AddComponent<DamageText>().renderDamage(gameObject, damage);
     }
 
@@ -88,11 +83,11 @@ public class Player : MonoBehaviour {
     {
         PlayerFireball fireball = gameObject.GetComponent<PlayerFireball>();
         Enemy attackedEnemy = getFirstEnemy();
-        if (attackedEnemy != null && fireball.GetMPCost() <= MP)
+        if (attackedEnemy != null && fireball.GetMPCost() <= GameData.playerFightState.MP)
         { 
             fireball.castAttackOnEnemy(attackedEnemy);
-            MP -= fireball.GetMPCost();
-            manaBar.updateCurrent(MP);
+            GameData.playerFightState.MP -= fireball.GetMPCost();
+            manaBar.updateCurrent(GameData.playerFightState.MP);
         }
     }
 
@@ -104,18 +99,18 @@ public class Player : MonoBehaviour {
     public void onHealEvent()
     {
         // TODO Implement spell instead of having hardcoded logic here.
-        if (MP > 30 && HP < MaxHP)
+        if (GameData.playerFightState.MP > 30 && GameData.playerFightState.HP < GameData.playerFightState.MaxHP)
         {
-            if (HP + 200 < MaxHP)
-                HP += 200;
+            if (GameData.playerFightState.HP + 200 < GameData.playerFightState.MaxHP)
+                GameData.playerFightState.HP += 200;
             else
-                HP = MaxHP;
+                GameData.playerFightState.HP = GameData.playerFightState.MaxHP;
 
-            MP -= 30;
+            GameData.playerFightState.MP -= 30;
         }
 
-        lifeBar.updateCurrent(HP);
-        manaBar.updateCurrent(MP);
+        lifeBar.updateCurrent(GameData.playerFightState.HP);
+        manaBar.updateCurrent(GameData.playerFightState.MP);
     }
 
     public void onHealEndEvent()
@@ -134,14 +129,14 @@ public class Player : MonoBehaviour {
 
     public void gainExperience(float _experience)
     {
-        experience += _experience;
-        if (experience >= levelUpExperience)
+        GameData.playerFightState.experience += _experience;
+        if (GameData.playerFightState.experience >= GameData.playerFightState.levelUpExperience)
         {
             levelUp();
-            experience -= levelUpExperience;
-            levelUpExperience += 10;
+            GameData.playerFightState.experience -= GameData.playerFightState.levelUpExperience;
+            GameData.playerFightState.levelUpExperience += 10;
         }
-        experienceBar.setValues(experience, levelUpExperience);
+        experienceBar.setValues(GameData.playerFightState.experience, GameData.playerFightState.levelUpExperience);
     }
 
     private void setPlayerAttacks()
@@ -150,42 +145,22 @@ public class Player : MonoBehaviour {
         gameObject.AddComponent<PlayerFireball>();
     }
 
-    private void updatePlayerRengens()
-    {
-        ONE_TENTH_SECOND_TIMER -= Time.deltaTime;
-        if (ONE_TENTH_SECOND_TIMER < 0)
-        {
-            if (MP + ManaRegeneration / 10 < MaxMP)
-            {
-                MP += ManaRegeneration / 10;
-                ONE_TENTH_SECOND_TIMER = 0.1f;
-            }
-            else
-            {
-                MP = MaxMP;
-                ONE_TENTH_SECOND_TIMER = 0.1f;
-            }
-
-            manaBar.updateCurrent(MP);
-        }
-    }
-
     private void levelUp()
     {
-        level++;
-        Strength += .5f;
-        MagicPower += .5f;
-        MaxHP += 50;
-        lifeBar.updateUpper(MaxHP);
-        MaxMP += 10;
-        manaBar.updateUpper(MaxMP);
-        ManaRegeneration += .5f;
+        GameData.playerFightState.level++;
+        GameData.playerFightState.Strength += .5f;
+        GameData.playerFightState.MagicPower += .5f;
+        GameData.playerFightState.MaxHP += 50;
+        lifeBar.updateUpper(GameData.playerFightState.MaxHP);
+        GameData.playerFightState.MaxMP += 10;
+        manaBar.updateUpper(GameData.playerFightState.MaxMP);
+        GameData.playerFightState.ManaRegeneration += .5f;
         DisplayLevel();
     }
 
     private void DisplayLevel()
     {
         GameObject TextPlayer = GameObject.Find("TextPlayerName");
-        TextPlayer.GetComponent<Text>().text = "PlayerName - Level " + level.ToString();
+        TextPlayer.GetComponent<Text>().text = "PlayerName - Level " + GameData.playerFightState.level.ToString();
     }
 }

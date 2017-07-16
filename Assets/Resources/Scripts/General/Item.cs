@@ -7,7 +7,7 @@ public class Item : MonoBehaviour {
 
     public ICountObserver observer = null;
 
-    public string name = null;
+
     public Image image = null;
 
     public int sellPrice = 0;

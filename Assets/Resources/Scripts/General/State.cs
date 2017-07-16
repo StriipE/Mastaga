@@ -10,7 +10,9 @@ public abstract class State {
     public enum Type
     {
         Empty,
-        Harvest
+        Cleared,
+        Harvest,
+        Mine
     }
 
     public Type type;
