@@ -9,7 +9,7 @@ public class ParticuleText
     private Text text;
     private float timer = 0f;
     private float maxTimer = 3.0f;
-    private const float TEXT_SPEED = 1f;
+    private const float TEXT_SPEED = 0.6f;
 
     public ParticuleText(GameObject target, string text, float timerValue)
     {
@@ -22,12 +22,13 @@ public class ParticuleText
         this.text = gameObject.AddComponent<Text>();
         this.text.text = text;
         this.text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-
-        this.text.GetComponent<RectTransform>().sizeDelta = new Vector2(20, 20);
+        this.text.fontSize = 13;
+        this.text.color = Color.blue;
+        this.text.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 20);
 
         this.text.transform.position = GameObject.Find("Main Camera").GetComponent<Camera>().
                                              WorldToScreenPoint(target.transform.position +
-                                             new Vector3(1, 0, 0)); // Offsets texts over the damaged target
+                                             new Vector3(0, 1.5f, 0)); // Offsets texts over the damaged target
     }
 
 	public void Update () {
@@ -38,9 +39,9 @@ public class ParticuleText
         }
         else
         {
-            text.color = new Color(255, 0, 0, timer / maxTimer - 1 );
+            text.color = new Color(text.color.r, text.color.g, text.color.b, 1 - (timer / maxTimer) );
             text.transform.position = Vector3.Lerp(text.transform.position,
-                           new Vector3(text.transform.position.x, text.transform.position.y, 0),
+                           new Vector3(text.transform.position.x, text.transform.position.y + TEXT_SPEED, 0),
                            Time.time);
         }
     }
