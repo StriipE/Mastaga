@@ -50,4 +50,9 @@ public class ParticuleText
     {
         return timer > maxTimer;
     }
+
+    public void destroy()
+    {
+        GameObject.Destroy(gameObject);
+    }
 }
