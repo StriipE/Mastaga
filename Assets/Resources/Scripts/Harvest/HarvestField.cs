@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HarvestField : MonoBehaviour {
 
@@ -15,7 +12,6 @@ public class HarvestField : MonoBehaviour {
     public FieldState state;
 
     private List<ParticuleText> dropParticules = new List<ParticuleText>();
-    //STUB FOR TEST
 
     private static bool isSetup = false;
 
