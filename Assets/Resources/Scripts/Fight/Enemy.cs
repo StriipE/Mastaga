@@ -30,7 +30,7 @@ namespace Assets.Resources.Scripts
         public float Speed;
         public float AttackRate;
         public Attack[] EnemyAttacks;
-        
+
         public void Awake()
         {
             TargetPlayer = GameObject.Find("Player").GetComponent<Player>();
@@ -44,7 +44,6 @@ namespace Assets.Resources.Scripts
         {
             HP -= damage;
             enemyHPBar.updateCurrent(HP);
-            gameObject.AddComponent<DamageText>().renderDamage(gameObject, damage);
         }
         
         public virtual void moveTowardsHero()
@@ -73,11 +72,13 @@ namespace Assets.Resources.Scripts
         {
             moveTowardsHero();
             renderHPBar();
+
             if (HP <= 0)
             {
                 rewardPlayer(TargetPlayer);
                 Destroy(this);
             }
+
 
         }
 
@@ -93,10 +94,6 @@ namespace Assets.Resources.Scripts
         public void OnDestroy()
         {
             Destroy(enemyHPBarHandler);
-
-            foreach (DamageText damageText in gameObject.GetComponents<DamageText>())
-                Destroy(damageText);
-
             Destroy(gameObject);
         }
 
@@ -122,6 +119,6 @@ namespace Assets.Resources.Scripts
         {
             yield return new WaitForSeconds(duration);
         }
-       // protected abstract void setAttacks();
+
     }
 }

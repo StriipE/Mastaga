@@ -14,6 +14,7 @@ public class ParticuleText
     public ParticuleText(GameObject target, string text, float timerValue)
     {
         this.maxTimer = timerValue;
+
         GameObject canvas = GameObject.Find("NPData");
         gameObject = new GameObject(text);
 
@@ -23,12 +24,12 @@ public class ParticuleText
         this.text.text = text;
         this.text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         this.text.fontSize = 13;
-        this.text.color = Color.blue;
+        this.text.color = Color.blue; 
         this.text.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 20);
 
         this.text.transform.position = GameObject.Find("Main Camera").GetComponent<Camera>().
                                              WorldToScreenPoint(target.transform.position +
-                                             new Vector3(0, 1.5f, 0)); // Offsets texts over the damaged target
+                                             new Vector3(0, 0, target.transform.localScale.y / 1.5f)); // Offsets texts over the damaged target
     }
 
 	public void Update () {
@@ -44,6 +45,11 @@ public class ParticuleText
                            new Vector3(text.transform.position.x, text.transform.position.y + TEXT_SPEED, 0),
                            Time.time);
         }
+    }
+
+    public void setColor(Color color)
+    {
+        this.text.color = color;
     }
 
     public bool isOver()
