@@ -29,7 +29,7 @@ public class ParticuleText
 
         this.text.transform.position = GameObject.Find("Main Camera").GetComponent<Camera>().
                                              WorldToScreenPoint(target.transform.position +
-                                             new Vector3(0, 0, target.transform.localScale.y / 1.5f)); // Offsets texts over the damaged target
+                                             new Vector3(0, 0, 0)); // Offsets texts over the damaged target
     }
 
 	public void Update () {

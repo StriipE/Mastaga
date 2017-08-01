@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
+    private GameObject fightScene;
     public Renderer rend;
     public Material standardMaterial;
     public Material attackMaterial;
@@ -23,7 +24,7 @@ public class Player : MonoBehaviour {
     public float MaxMP;
     
     private Attack[] playerAttacks { get { return gameObject.GetComponents<Attack>(); } }
-    private List<DamageText> damageParticles = new List<DamageText>();
+
 
     // Use this for initialization
 	void Start ()
@@ -59,26 +60,14 @@ public class Player : MonoBehaviour {
         manaBar.renderValues();
         experienceBar.renderValues();
 
-        DamageText damageParticlesRemoved = null;
-        foreach (DamageText particule in damageParticles)
-        {
-            if (particule.isOver())
-            {
-                damageParticlesRemoved = particule;
-            }
-            particule.Update();
-        }
-        if (damageParticlesRemoved != null)
-        {
-            damageParticles.Remove(damageParticlesRemoved);
-        }
+       
     }
 
     public void getDamaged(float damage)
     {
         GameData.playerFightState.HP -= damage;
         lifeBar.updateCurrent(GameData.playerFightState.HP);
-        damageParticles.Add(new DamageText(this.gameObject, damage.ToString("0"), 1.0f));
+        FightScene.damageParticles.Add(new DamageText(this.gameObject, damage.ToString("0"), 1.0f));
     }
 
     public void onAttackEvent()
@@ -88,7 +77,7 @@ public class Player : MonoBehaviour {
         if (attackedEnemy != null && (attackedEnemy.transform.position.x - gameObject.transform.position.x) < 20)
         {
             gameObject.GetComponent<PlayerBasicAttack>().castAttackOnEnemy(attackedEnemy);
-            damageParticles.Add(new DamageText(attackedEnemy.gameObject, this.gameObject.GetComponent<PlayerBasicAttack>().calculateDamage().ToString("0"), 1.0f));
+            FightScene.damageParticles.Add(new DamageText(attackedEnemy.gameObject, this.gameObject.GetComponent<PlayerBasicAttack>().calculateDamage().ToString("0"), 1.0f));
         }
     }
 
@@ -106,7 +95,7 @@ public class Player : MonoBehaviour {
             fireball.castAttackOnEnemy(attackedEnemy);
             GameData.playerFightState.MP -= fireball.GetMPCost();
             manaBar.updateCurrent(GameData.playerFightState.MP);
-            damageParticles.Add(new DamageText(attackedEnemy.gameObject, fireball.calculateDamage().ToString("0"), 1.0f));
+            FightScene.damageParticles.Add(new DamageText(attackedEnemy.gameObject, fireball.calculateDamage().ToString("0"), 1.0f));
         }
     }
 
