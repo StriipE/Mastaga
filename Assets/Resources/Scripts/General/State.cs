@@ -13,7 +13,13 @@ public abstract class State {
         Empty,
         Cleared,
         Harvest,
-        Mine
+        Mine,
+        Crop,
+        House,
+        Laboratory,
+        TownHall,
+        Storage,
+        Barrack
     }
 
     public Type type;

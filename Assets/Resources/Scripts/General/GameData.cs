@@ -43,19 +43,25 @@ public class GameData : MonoBehaviour {
             inventory = new Inventory(startItems);
             money = new Money(startMoney);
 
-            //STUB FOR HARVEST TEST
-            for (int i = 0; i < 15; i++)
-            {
-                if (i == 0)
-                {
-                    mapStates.Add(i, new HarvestState());
-                }
-                else
-                {
-                    mapStates.Add(i, new EmptyState());
-                }
-                onChangeState(i, mapStates[i].type);
-            }
+            // Temp map stub
+            mapStates.Add(0, new HarvestState());
+            mapStates.Add(1, new MineState());
+            mapStates.Add(2, new CropState());
+            mapStates.Add(3, new HouseState());
+            mapStates.Add(4, new LaboratoryState());
+            mapStates.Add(5, new TownHallState());
+            mapStates.Add(6, new StorageState());
+            mapStates.Add(7, new BarrackState());
+
+            onChangeState(0, mapStates[0].type);
+            onChangeState(1, mapStates[1].type);
+            onChangeState(2, mapStates[2].type);
+            onChangeState(3, mapStates[3].type);
+            onChangeState(4, mapStates[4].type);
+            onChangeState(5, mapStates[5].type);
+            onChangeState(6, mapStates[6].type);
+            onChangeState(7, mapStates[7].type);
+
         }
         if (SceneManager.GetActiveScene().name == "Map")
         {
