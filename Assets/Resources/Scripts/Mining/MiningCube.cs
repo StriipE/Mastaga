@@ -31,7 +31,9 @@ public class MiningCube : MonoBehaviour {
     private void OnMouseDown()
     {
         countToDestruction -= 1;
-        
+
+        rewardStone(1);
+
         if (countToDestruction == 0)
         {
             cleanUp();
@@ -48,5 +50,10 @@ public class MiningCube : MonoBehaviour {
             item.destroy();
         }
         particulesText.Clear();
+    }
+
+    private void rewardStone(int amount)
+    {
+        GameData.stone.addStone(amount);
     }
 }

@@ -16,6 +16,8 @@ public class GameData : MonoBehaviour {
     
     public static Money money = null;
     public static Inventory inventory = null;
+    public static Population population = null;
+    public static Stone stone = null;
     public static int actualMapFieldId = -1;
     private static Dictionary<int, State> mapStates = new Dictionary<int, State>();
     public static FightState playerFightState = null;
@@ -24,16 +26,25 @@ public class GameData : MonoBehaviour {
     public float startHour = 12;
     public float realTimeAcceleration = 10;
     public float startMoney = 0;
+    public int startMaxPopulation = 5;
+    public int startStone = 0;
+
     public List<Item> startItems;
     
     private Text moneyText;
+    private Text populationText;
+    private Text stoneText;
+
     private Transform fieldHolder;
 
     private void Start()
     {
-        //Load money text
+        //Load UI texts
         moneyText = GameObject.Find("TextMoneyValue").GetComponent<Text>();
-        
+        stoneText = GameObject.Find("TextStoneValue").GetComponent<Text>();
+        // Getting the top level component there because population has 2 parts.
+        populationText = GameObject.Find("TextPopulation").GetComponent<Text>();
+
         if (!activated)
         {
             activated = true;
@@ -42,6 +53,8 @@ public class GameData : MonoBehaviour {
                 realTimeAcceleration);
             inventory = new Inventory(startItems);
             money = new Money(startMoney);
+            population = new Population(startMaxPopulation);
+            stone = new Stone(startStone);
 
             // Temp map stub
             mapStates.Add(0, new HarvestState());
@@ -103,6 +116,13 @@ public class GameData : MonoBehaviour {
         {
             moneyText.text = money.toString();
         }
+        if(populationText)
+        {
+            populationText.transform.GetChild(0).GetComponent<Text>().text = population.getPopulation().ToString() + "/";
+            populationText.transform.GetChild(1).GetComponent<Text>().text = population.getMaxPopulation().ToString();
+        }
+        if(stoneText)
+            stoneText.text = stone.getAmount().ToString();
     }
 
     private void onChangeState(int id, State.Type state)
@@ -128,6 +148,24 @@ public class GameData : MonoBehaviour {
             case State.Type.Mine:
                 m = Resources.Load<Material>("Materials/Map/MineMaterial");
                 break;
+            case State.Type.Barrack:
+                m = Resources.Load<Material>("Materials/Map/BarrackMaterial");
+                break;
+            case State.Type.Crop:
+                m = Resources.Load<Material>("Materials/Map/CropMaterial");
+                break;
+            case State.Type.House:
+                m = Resources.Load<Material>("Materials/Map/HouseMaterial");
+                break;
+            case State.Type.Laboratory:
+                m = Resources.Load<Material>("Materials/Map/LaboratoryMaterial");
+                break;
+            case State.Type.Storage:
+                m = Resources.Load<Material>("Materials/Map/StorageMaterial");
+                break;
+            case State.Type.TownHall:
+                m = Resources.Load<Material>("Materials/Map/TownHallMaterial");
+                break;
             default:
                 return;
         }
@@ -138,7 +176,6 @@ public class GameData : MonoBehaviour {
 
     public void clearActualState()
     {
-        
         mapStates[actualMapFieldId].type = State.Type.Cleared;
         fieldHolder.GetChild(actualMapFieldId).GetComponent<MapField>().actualMaptype = State.Type.Cleared;
     }
